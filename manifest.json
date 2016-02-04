@@ -9,7 +9,9 @@
 
 	"permissions" : [
 		"activeTab",
-		"https://ajax.googleapis.com/"
+		"https://ajax.googleapis.com/",
+		"tabs", 
+		"<all_urls>"
 	],
 
 	"browser_action": {
