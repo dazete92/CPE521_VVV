@@ -53,15 +53,33 @@ function getCurrentTabUrl(callback) {
 document.addEventListener('DOMContentLoaded', function() {
 
 	var ws = new WebSocket("ws://localhost:10000");
+	var jsonData = 'apikey=123';
 	$('#b1').click(function() { 
-		console.log('clicked button 1') 
+		console.log('Enabled All Passive Scanners') 
 		ws.send("option1")
+		$.ajax({
+		   type: 'GET',
+		   url: 'http://localhost:8080/JSON/pscan/action/enableAllScanners/',
+		   data: jsonData,
+		   dataType: 'json',
+		   success: function(data) {
+		      console.log(data);
+		   }
+		});	
 	})
 
 	$('#b2').click(function() {
-		console.log('clicked button 2')
+		console.log('Disabled All Passive Scanners')
 		ws.send("option2")
-
+		$.ajax({
+		   type: 'GET',
+		   url: 'http://localhost:8080/JSON/pscan/action/disableAllScanners/',
+		   data: jsonData,
+		   dataType: 'json',
+		   success: function(data) {
+		      console.log(data);
+		   }
+		});	
 	})
 
 	$('#b3').click(function() {
@@ -73,6 +91,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('#b4').click(function() {
 		console.log('clicked button 4')
 		ws.send("option4")
+		$.ajax({
+		   type: 'GET',
+		   url: 'http://localhost:8080/JSON/pscan/view/scanners/',
+		   dataType: 'json',
+		   success: function(data) {
+		      console.log(data);
+		   }
+		});	
 	})
 
 	//socket.connect('http://localhost:10000', {autoConnect : true});
