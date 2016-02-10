@@ -8,7 +8,7 @@ async def clientConnected(websocket, path):
 		print (message)
 
 start_server = websockets.serve(clientConnected, 'localhost', 10000)
-print('ran the server..')
+print('Server Running on.')
 asyncio.get_event_loop().run_until_complete(start_server)
 
 asyncio.get_event_loop().run_forever()

@@ -53,9 +53,17 @@ function getCurrentTabUrl(callback) {
 document.addEventListener('DOMContentLoaded', function() {
 
 	var ws = new WebSocket("ws://localhost:10000");
-	$('#b1').click(function() { 
-		console.log('clicked button 1') 
-		ws.send("option1")
+	$('#findVulnBtn').click(function() { 
+
+		chrome.tabs.executeScript(null, {
+    file: "findVulnerabilities.js"
+    }, function() {
+      // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+      if (chrome.runtime.lastError) {
+        message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+      }
+    });
+
 	})
 
 	$('#b2').click(function() {
@@ -93,15 +101,6 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
 function onWindowLoad() {
 
   var message = document.querySelector('#message');
-
-  chrome.tabs.executeScript(null, {
-    file: "findVulnerabilities.js"
-  }, function() {
-    // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-    if (chrome.runtime.lastError) {
-      message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-    }
-  });
 
 }
 
