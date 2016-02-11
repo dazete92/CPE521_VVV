@@ -1,3 +1,16 @@
 body {
 	height: 600px;
 }
+
+.conatiner {
+	padding: 10px;
+	margin: 20px;
+}
+
+#passive-tools {
+	background:rgba(144, 238, 144, 0.9); /* light green */
+}
+
+#active-tools {
+	background:rgba(250, 128, 114, 0.8); /* salmon */
+}

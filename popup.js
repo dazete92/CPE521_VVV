@@ -68,7 +68,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
+  $('#enable-active').click(function() {
+    if (!$('#active-buttons').is(":visible")) {
+      //if (confirm("You're about to enable some invasive tools. Are you sure this website is down with that?")) {
+        //Do velociraptor sound byte
+        $('#active-buttons').toggle();
 
+      //}
+    } else {
+      $('#active-buttons').toggle();
+    }
+  })
 
 	$('#b1').click(function() { 
 		console.log('Enabled All Passive Scanners') 
