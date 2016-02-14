@@ -46,7 +46,6 @@
       <button class="btn-primary" type="button" id='findVulnBtn'>Find Surfaces</button><br><br>
       <button class="btn-primary" type="button" id='b1'>Option 1</button><br><br>
       <button class="btn-primary" type="button" id='b2'>Option 2</button><br><br>
-      <button class="btn-primary" type="button" id='b5'>API Key</button><br><br>
     </div>
 
     <div class="container" id="active-tools">

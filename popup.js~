@@ -133,6 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		console.log('clicked button 5')
       key = Math.random().toString(16).slice(2)
       keyArgument = "apikey=" + key
+      console.log(keyArgument)
       alert("API Key = " + key + '\n\n' + "Initialize ZAP Instance: > ./zap.sh -daemon -config api.key=<key>")
 	})
 
