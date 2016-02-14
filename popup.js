@@ -50,6 +50,23 @@ function getCurrentTabUrl(callback) {
   // alert(url); // Shows "undefined", because chrome.tabs.query is async.
 }
 
+function getBaseUrl() {
+   
+   var url
+   var baseUrl
+
+   getCurrentTabUrl(function(url) {
+      var parser = document.createElement('a')
+      parser.href = url
+      baseUrl = parser.protocol + '//' + parser.hostname + '/'
+      returnValue()
+   });
+
+   var returnValue = function() {
+      console.log("base " + baseUrl)      
+   };
+}
+
 document.addEventListener('DOMContentLoaded', function() {
 
    var ws = new WebSocket("ws://localhost:10000");
@@ -113,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	$('#b3').click(function() {
 		console.log('clicked button 3')
 		ws.send("option3")
-
+      getBaseUrl()
 	})
 
 	$('#b4').click(function() {
@@ -133,7 +150,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		console.log('clicked button 5')
       key = Math.random().toString(16).slice(2)
       keyArgument = "apikey=" + key
-      alert("API Key = " + key + '\n\n' + "Initialize ZAP Instance: > ./zap.sh -daemon -config api.key=<key>")
+      alert(keyArgument + '\n\n' + "Initialize ZAP Instance: > ./zap.sh -daemon -config api.key=<key>")
 	})
 
 	//socket.connect('http://localhost:10000', {autoConnect : true});
