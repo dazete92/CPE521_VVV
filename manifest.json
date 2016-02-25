@@ -14,6 +14,14 @@
 		"<all_urls>"
 	],
 
+	"content_scripts": [
+		{
+			"matches": ["<all_urls>"],
+			"js" : ["jquery.js", "jquery-ui.min.js", "jquery.qtip.min.js"],
+			"css" : ["jquery.qtip.min.css"]
+		}
+	],
+
 	"browser_action": {
 	    "default_icon": "icon.png",
 	    "default_popup": "popup.html",

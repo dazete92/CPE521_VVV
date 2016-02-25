@@ -10,7 +10,6 @@
  */
 
 
-
 function getCurrentTabUrl(callback) {
   // Query filter to be passed to chrome.tabs.query - see
   // https://developer.chrome.com/extensions/tabs#method-query
@@ -69,20 +68,21 @@ function getBaseUrl() {
 
 document.addEventListener('DOMContentLoaded', function() {
 
-   var ws = new WebSocket("ws://localhost:10000");
    var key;
    var keyArgument;
 
    var jsonData = 'apikey=123';
 
 	$('#findVulnBtn').click(function() { 
-
 		chrome.tabs.executeScript(null, {
     file: "findVulnerabilities.js"
-    }, function() {
+     }, function() {
       // If you try and inject into an extensions page or the webstore/NTP you'll get an error
       if (chrome.runtime.lastError) {
         message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+      }
+      else {
+        addXSSToolTips()
       }
     });
   })
@@ -153,10 +153,6 @@ document.addEventListener('DOMContentLoaded', function() {
       alert(keyArgument + '\n\n' + "Initialize ZAP Instance: > ./zap.sh -daemon -config api.key=<key>")
 	})
 
-	//socket.connect('http://localhost:10000', {autoConnect : true});
-
-	console.log('check');
-
 });
 
 
@@ -167,11 +163,3 @@ chrome.runtime.onMessage.addListener(function(request, sender) {
     message.innerText = request.source;
   }
 });
-
-function onWindowLoad() {
-
-  var message = document.querySelector('#message');
-
-}
-
-window.onload = onWindowLoad;
