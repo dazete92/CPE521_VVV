@@ -49,27 +49,85 @@ function getCurrentTabUrl(callback) {
   // alert(url); // Shows "undefined", because chrome.tabs.query is async.
 }
 
-function getBaseUrl() {
-   
-   var url
-   var baseUrl
+function getZAPNumberAlerts(url, callback) {
 
-   getCurrentTabUrl(function(url) {
-      var parser = document.createElement('a')
-      parser.href = url
-      baseUrl = parser.protocol + '//' + parser.hostname + '/'
-      returnValue()
-   });
+   var params = "baseurl=" + url;
 
-   var returnValue = function() {
-      console.log("base " + baseUrl)      
-   };
+   $.ajax({
+	   type: 'GET',
+	   url: 'http://localhost:8080/JSON/core/view/numberOfAlerts/',
+	   data: params,
+	   dataType: 'json',
+	   success: function(data) {
+         console.log(data)
+         callback(data)         
+	   },
+      error: function(data) {
+         console.log("ERROR: " + data);
+      }
+	});
+}
+
+function getZAPAlerts(url, alertNum, callback) {
+
+   var restData = 'baseurl=' + url + '&start=0&count=' + alertNum
+   console.log(restData)
+
+	$.ajax({
+	   type: 'GET',
+	   url: 'http://localhost:8080/JSON/core/view/alerts/',
+	   data: restData,
+	   dataType: 'json',
+	   success: function(data) {
+         callback(data)
+	   },
+      error: function(data) {
+         console.log("ERROR: " + data);
+      }
+	});
+}
+
+function getZAPNumberMessages(url, callback) {
+
+   var params = "baseurl=" + url;
+
+	$.ajax({
+	   type: 'GET',
+	   url: 'http://localhost:8080/JSON/core/view/numberOfMessages/',
+	   data: params,
+	   dataType: 'json',
+	   success: function(data) {
+         console.log(data)
+         callback(data)
+	   }
+	});
+}
+
+function getZAPMessages(url, alertNum, callback) {
+
+   var restData = 'baseurl=' + url + '&start=0&count=' + alertNum
+   console.log(restData)
+
+	$.ajax({
+	   type: 'GET',
+	   url: 'http://localhost:8080/JSON/core/view/messages/',
+	   data: restData,
+	   dataType: 'json',
+	   success: function(data) {
+         callback(data)
+	   },
+      error: function(data) {
+         console.log("ERROR: " + data);
+      }
+	});
 }
 
 document.addEventListener('DOMContentLoaded', function() {
 
-   var key;
-   var keyArgument;
+
+   var key, keyArgument;
+   var alerts, messages;
+   var json, obj;
 
    var jsonData = 'apikey=123';
 
@@ -101,7 +159,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$('#b1').click(function() { 
 		console.log('Enabled All Passive Scanners') 
-		ws.send("option1")
 		$.ajax({
 		   type: 'GET',
 		   url: 'http://localhost:8080/JSON/pscan/action/enableAllScanners/',
@@ -115,7 +172,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$('#b2').click(function() {
 		console.log('Disabled All Passive Scanners')
-		ws.send("option2")
 		$.ajax({
 		   type: 'GET',
 		   url: 'http://localhost:8080/JSON/pscan/action/disableAllScanners/',
@@ -129,13 +185,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$('#b3').click(function() {
 		console.log('clicked button 3')
-		ws.send("option3")
-      getBaseUrl()
+      getCurrentTabUrl(function(url) {
+         var parser = document.createElement('a')
+         parser.href = url
+         baseUrl = "http://" + parser.hostname + '/'
+         getZAPNumberAlerts(baseUrl, function(data) {
+            getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
+               console.log(zapAlerts.alerts)
+            });
+         })
+
+         getZAPNumberMessages(baseUrl, function(data) {
+            getZAPMessages(baseUrl, data.numberOfMessages, function(zapMessages) {
+               console.log(zapMessages.messages)
+            });
+         })
+      });
 	})
 
 	$('#b4').click(function() {
 		console.log('clicked button 4')
-		ws.send("option4")
 		$.ajax({
 		   type: 'GET',
 		   url: 'http://localhost:8080/JSON/pscan/view/scanners/',
