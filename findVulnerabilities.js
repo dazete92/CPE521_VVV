@@ -14,7 +14,7 @@ function discoverAttackSurface(document_root) {
     text += findSession(document_root);
     text += getURLParameters(document_root);
     text += getHttpHeader(document_root);
-    addToolTips(document_root)
+    //addToolTips(document_root)
 
     return text;
 }
@@ -26,9 +26,6 @@ function findXSS(document_root) {
     var inputsCollection = document.getElementsByTagName("input");
     for (var i=0; i < inputsCollection.length; i++) {
         inputsCollection[i].setAttribute("style", "outline: #00FF00 dotted thick;");
-        if (inputsCollection[i].getAttribute('type') == "text") {
-            inputsCollection[i].setAttribute("style", "outline: #00FF00 dotted thick;");
-            inputsCollection[i].setAttribute("class", "XSSVuln");
 
         //inputs += inputsCollection[i].outerHTML;
         //inputs += "\n";
@@ -74,7 +71,7 @@ function findSQLi(document_root) {
             inputsCollection[i].getAttribute('type') == "location") {
 
             inputsCollection[i].setAttribute("style", "outline: #FF0000 dotted thick;");
-            inputsCollection[i].addEventListener("click", function(){ alert("Hello World!"); });
+            inputsCollection[i].addEventListener("click", function(){ console.log("Hello World!"); });
 
             //inputs += inputsCollection[i].outerHTML;
             //inputs += "\n";
@@ -158,6 +155,7 @@ function getHttpHeader(document_root) {
 }
 
 //helper methods
+/*
 function addToolTips(document_root) {
     $('.XSSVuln').qtip({
         content: {
@@ -167,15 +165,14 @@ function addToolTips(document_root) {
             at: 'top right',
             my: 'bottom left'
         }
-    })
-}
+    });
+}*/
 
-discoverAttackSurface(document)
+discoverAttackSurface(document);
 
 /*
 chrome.runtime.sendMessage({
     action: "getVulns",
     source: discoverAttackSurface(document)
-<<<<<<< HEAD
 });
 */

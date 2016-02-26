@@ -226,6 +226,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
+  log("Got message from background page: " + msg);
+});
+
 //Grab the current pages HTML
 
 chrome.runtime.onMessage.addListener(function(request, sender) {
