@@ -8,8 +8,10 @@
  * @param {function(string)} callback - called when the URL of the current tab
  *   is found.
  */
-var savedText = "";
 
+//initial stuff
+
+//functions and listeners
 function getCurrentTabUrl(callback) {
   // Query filter to be passed to chrome.tabs.query - see
   // https://developer.chrome.com/extensions/tabs#method-query
@@ -131,7 +133,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
    var jsonData = 'apikey=123';
 
-   message.innerText = localStorage.savedText;
+   scanInfo.innerText = localStorage.savedText;
 
 	$('#findVulnBtn').click(function() { 
 		chrome.tabs.executeScript(null, {
@@ -139,12 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
     }, function(results) {
       // If you try and inject into an extensions page or the webstore/NTP you'll get an error
       if (chrome.runtime.lastError) {
-        message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+        scanInfo.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
       }
       else {
-        message.innerText = results;
+        scanInfo.innerText += ('\n' + results);
         localStorage.savedText = results;
-        addXSSToolTips()
+        //addXSSToolTips()
       }
     });
   })
@@ -229,9 +231,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 //Grab the current pages HTML
-
-chrome.runtime.onMessage.addListener(function(request, sender) {
-  if (request.action == "getSource") {
-    message.innerText = request.source;
+chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
+  if (msg.clicked) {
+    messages.innerText += ("\nYou clicked SQLi field with ID: " + msg.extra);
   }
+  console.log("Got message from background page: " + msg);
 });

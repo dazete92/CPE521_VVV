@@ -71,8 +71,10 @@ function findSQLi(document_root) {
             inputsCollection[i].getAttribute('type') == "location") {
 
             inputsCollection[i].setAttribute("style", "outline: #FF0000 dotted thick;");
-            inputsCollection[i].addEventListener("click", function(){ console.log("Hello World!"); });
-
+            inputsCollection[i].addEventListener("click", function(){ console.log("field pressed"); });
+            inputsCollection[i].addEventListener("click", function(){ 
+                chrome.runtime.sendMessage({clicked: true, extra: this.id}); 
+            });
             //inputs += inputsCollection[i].outerHTML;
             //inputs += "\n";
         }
