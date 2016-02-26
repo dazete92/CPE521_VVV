@@ -1,6 +1,7 @@
 // @author Rob W <http://stackoverflow.com/users/938089/rob-w>
 // Demo: var serialized_html = DOMtoString(document);
 
+//main method
 function discoverAttackSurface(document_root) {
     var text = ''
 
@@ -13,21 +14,26 @@ function discoverAttackSurface(document_root) {
     text += findSession(document_root);
     text += getURLParameters(document_root);
     text += getHttpHeader(document_root);
+    addToolTips(document_root)
 
     return text;
 }
 
+//vuln finding methods
 function findXSS(document_root) {
     //find ALL forms
     var inputs = '';
     var inputsCollection = document.getElementsByTagName("input");
-
     for (var i=0; i < inputsCollection.length; i++) {
         inputsCollection[i].setAttribute("style", "outline: #00FF00 dotted thick;");
+        if (inputsCollection[i].getAttribute('type') == "text") {
+            inputsCollection[i].setAttribute("style", "outline: #00FF00 dotted thick;");
+            inputsCollection[i].setAttribute("class", "XSSVuln");
 
         //inputs += inputsCollection[i].outerHTML;
         //inputs += "\n";
     }
+
     return inputs;
 }
 
@@ -42,6 +48,9 @@ function findAuthentication(document_root) {
             inputsCollection[i].getAttribute('type') == "username") {
             
             inputsCollection[i].setAttribute("style", "outline: #0000FF dotted thick;");
+
+
+            //Wrap it in jquery and then add the qtip
 
             //inputs += inputsCollection[i].outerHTML;
             //inputs += "\n";
@@ -148,11 +157,25 @@ function getHttpHeader(document_root) {
     return headers;
 }
 
+//helper methods
+function addToolTips(document_root) {
+    $('.XSSVuln').qtip({
+        content: {
+          text: 'This is an xss vuln!!!!111'
+        },
+        position: {
+            at: 'top right',
+            my: 'bottom left'
+        }
+    })
+}
+
 discoverAttackSurface(document)
 
 /*
 chrome.runtime.sendMessage({
     action: "getVulns",
     source: discoverAttackSurface(document)
+<<<<<<< HEAD
 });
 */
