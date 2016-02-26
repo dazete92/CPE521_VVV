@@ -8,7 +8,7 @@
  * @param {function(string)} callback - called when the URL of the current tab
  *   is found.
  */
-
+var savedText = "";
 
 function getCurrentTabUrl(callback) {
   // Query filter to be passed to chrome.tabs.query - see
@@ -131,6 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
    var jsonData = 'apikey=123';
 
+   message.innerText = localStorage.savedText;
+
 	$('#findVulnBtn').click(function() { 
 		chrome.tabs.executeScript(null, {
     file: "findVulnerabilities.js"
@@ -141,6 +143,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
       else {
         message.innerText = results;
+        localStorage.savedText = results;
         addXSSToolTips()
       }
     });
@@ -223,11 +226,6 @@ document.addEventListener('DOMContentLoaded', function() {
       alert(keyArgument + '\n\n' + "Initialize ZAP Instance: > ./zap.sh -daemon -config api.key=<key>")
 	})
 
-});
-
-
-chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
-  log("Got message from background page: " + msg);
 });
 
 //Grab the current pages HTML
