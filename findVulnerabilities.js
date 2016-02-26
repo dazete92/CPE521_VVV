@@ -1,40 +1,32 @@
 // @author Rob W <http://stackoverflow.com/users/938089/rob-w>
 // Demo: var serialized_html = DOMtoString(document);
 
-function getForms(document_root) {
-
-    //THIS IS WHERE WE CAN MODIFY THE DOM
-    var output = '';
-    var formsCollection = document.getElementsByTagName("form");
-
-    for(var i=0;i<formsCollection.length;i++)
-    {
-        html += formsCollection[i].innerHTML;
-    }
-    return html;
-}
-
 function discoverAttackSurface(document_root) {
     var text = ''
 
+    //run findXSS before other functions so that other functions
+    //add their border after findXSS does
+    text += findForms(document_root);
     text += findXSS(document_root);
+    text += findSQLi(document_root);
     text += findAuthentication(document_root);
+    text += findSession(document_root);
+    text += getURLParameters(document_root);
+    text += getHttpHeader(document_root);
 
     return text;
 }
 
 function findXSS(document_root) {
-    //find all text fields
+    //find ALL forms
     var inputs = '';
     var inputsCollection = document.getElementsByTagName("input");
 
     for (var i=0; i < inputsCollection.length; i++) {
-        if (inputsCollection[i].getAttribute('type') == "text") {
-            inputsCollection[i].setAttribute("style", "outline: #00FF00 dotted thick;");
+        inputsCollection[i].setAttribute("style", "outline: #00FF00 dotted thick;");
 
-            //inputs += inputsCollection[i].outerHTML;
-            //inputs += "\n";
-        }
+        //inputs += inputsCollection[i].outerHTML;
+        //inputs += "\n";
     }
     return inputs;
 }
@@ -48,16 +40,119 @@ function findAuthentication(document_root) {
         if (inputsCollection[i].getAttribute('type') == "email" ||
             inputsCollection[i].getAttribute('type') == "password" ||
             inputsCollection[i].getAttribute('type') == "username") {
+            
             inputsCollection[i].setAttribute("style", "outline: #0000FF dotted thick;");
 
             //inputs += inputsCollection[i].outerHTML;
             //inputs += "\n";
         }
     }
+
     return inputs;
 }
 
+function findSQLi(document_root) {
+    //find all email, password, username fields
+    var inputs = '';
+    var inputsCollection = document.getElementsByTagName("input");
+
+    for (var i=0; i < inputsCollection.length; i++) {
+        if (inputsCollection[i].getAttribute('type') == "email" ||
+            inputsCollection[i].getAttribute('type') == "password" ||
+            inputsCollection[i].getAttribute('type') == "username" ||
+            inputsCollection[i].getAttribute('type') == "search" ||
+            inputsCollection[i].getAttribute('type') == "name" ||
+            inputsCollection[i].getAttribute('type') == "location") {
+
+            inputsCollection[i].setAttribute("style", "outline: #FF0000 dotted thick;");
+            inputsCollection[i].addEventListener("click", function(){ alert("Hello World!"); });
+
+            //inputs += inputsCollection[i].outerHTML;
+            //inputs += "\n";
+        }
+    }
+
+    return inputs;
+}
+
+function findForms(document_root) {
+    //find ALL forms
+    var forms = '';
+    var formsCollection = document.getElementsByTagName("form");
+
+    for (var i=0; i < formsCollection.length; i++) {
+        formsCollection[i].setAttribute("style", "outline: #000000 dotted thick;");
+
+        //inputs += inputsCollection[i].outerHTML;
+        //inputs += "\n";
+    }
+
+    return forms;
+}
+
+function findSession(document_root) {
+    //find all session related cookie data
+    //var cookies = '';
+    var sessionCookies = '';
+    var cookiesCollection = document.cookie.split(";");
+
+    for (var i=0; i < cookiesCollection.length; i++) {
+        //formsCollection[i].setAttribute("style", "outline: #000000 dotted thick;");
+        //cookies += cookiesCollection[i];
+        //cookies += "\n";
+
+        if (cookiesCollection[i].toLowerCase().indexOf("sess") > 0) {
+            sessionCookies += cookiesCollection[i];
+            sessionCookies += "\n";
+        }
+    }
+
+    if (sessionCookies.length > 0)
+        sessionCookies = 'Session Cookies:\n' + sessionCookies;
+    else
+        sessionCookies = ''
+
+    return sessionCookies;
+}
+
+function getURLParameters(document_root) {
+    //find ALL forms
+    var parameters = '';
+    var paramsCollection = document.location.search.split("&");
+
+    for (var i=0; i < paramsCollection.length; i++) {
+        parameters += paramsCollection[i];
+        parameters += "\n";
+    }
+    //parameters = paramsCollection;
+
+    if (parameters.replace(/\s/g, '') != '')
+        parameters = '\nParameters:\n' + parameters;
+    else
+        parameters = '';
+
+    return parameters;
+}
+
+function getHttpHeader(document_root) {
+    var req = new XMLHttpRequest();
+    var headers = '';
+
+    req.open('HEAD', document.location, false);
+    req.send(null);
+    headers = req.getAllResponseHeaders().toLowerCase();
+
+    if (headers.length > 0)
+         headers = '\nHeader Information:\n' + headers;
+
+    return headers;
+}
+
+discoverAttackSurface(document)
+
+/*
 chrome.runtime.sendMessage({
-    action: "getSource",
+    action: "getVulns",
     source: discoverAttackSurface(document)
 });
+*/
