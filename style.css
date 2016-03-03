@@ -14,3 +14,57 @@ body {
 #active-tools {
 	background:rgba(250, 128, 114, 0.8); /* salmon */
 }
+
+ul {
+	list-style-type: none;
+}
+
+.checkbox {
+	float: right;
+}
+
+#botContainers {
+	display: inline;
+}
+
+.zapButton {
+	display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    display: inline;
+    float: left;
+}
+
+.deactivatedBox {
+	color: #808080;
+}
+
+.clicked {
+    background-color: #4CAF50;
+}
+
+.toolCheckbox {
+	float: left;
+}
+
+#topBar {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+
+.topButton {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+    display: inline;
+    float: left;
+}
+
