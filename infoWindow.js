@@ -124,29 +124,26 @@ function getZAPMessages(url, alertNum, callback) {
 	});
 }
 
+//interactions with the HTML
 document.addEventListener('DOMContentLoaded', function() {
-
-
    var key, keyArgument;
    var alerts, messages;
    var json, obj;
 
    var jsonData = 'apikey=123';
 
-   scanInfo.innerText = localStorage.savedText;
+   //scanInfo.innerText = localStorage.savedText;
 
-	$('#findVulnBtn').click(function() { 
-		chrome.tabs.executeScript(null, {
+	$('#findVulnBtn').click(function() {
+
+    //inject script into last known tab
+    console.log("scan" + lastActiveTab);
+		chrome.tabs.executeScript(lastActiveTab, {
     file: "findVulnerabilities.js"
     }, function(results) {
       // If you try and inject into an extensions page or the webstore/NTP you'll get an error
       if (chrome.runtime.lastError) {
         scanInfo.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-      }
-      else {
-        scanInfo.innerText += ('\n' + results);
-        localStorage.savedText = results;
-        //addXSSToolTips()
       }
     });
   })
@@ -230,10 +227,61 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+//check for new tabs
+var lastActiveTab;
+var myTabId;
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  chrome.tabs.getCurrent(function(tab){myTabId = tab.id;});
+  if (myTabId && activeInfo.tabId != myTabId) {
+    lastActiveTab = activeInfo.tabId;
+    console.log("lastActive: " + lastActiveTab + ", my: " + myTabId);
+  }
+});
+
+chrome.windows.onFocusChanged.addListener(function(windowId) {
+  if (windowId != -1) {
+    chrome.tabs.query({'windowId': windowId, 'active': true}, function(tabs) {
+      if (myTabId && tabs[0].id != myTabId) {
+        lastActiveTab = tabs[0].id;
+        console.log("window focus change - lastActive: " + lastActiveTab + ", my: " + myTabId);
+      }
+      //console.log("window id:" + windowId);
+    }); 
+  }
+});
+
 //Grab the current pages HTML
+var contentWindowId;
+var targetURL;
+
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.clicked) {
-    messages.innerText += ("\nYou clicked SQLi field with ID: " + msg.extra);
+    console.log(msg);
+
+    var detail_id = document.getElementById('detail_id');
+    var detail_type = document.getElementById('detail_type');
+    var detail_conent = document.getElementById('detail_content');
+    var detail_vuln = document.getElementById('detail_vuln');
+
+    detail_id.innerText = msg.detail_id;
+    detail_type.innerText = msg.detail_type;
+    detail_content.innerText = msg.detail_content;
+    detail_vuln.innerText = msg.detail_vuln;
   }
-  console.log("Got message from background page: " + msg);
+  if (msg.content_window_id) {
+    contentWindowId = msg.content_window_id;
+    console.log("window id: " + contentWindowId);
+  }
+  if (msg.target_url) {
+    targetURL = msg.target_url;
+    console.log("tab url: " + targetURL);
+  }
+  if (msg.scanResults) {
+    var scan_info_div = document.getElementById('scanInfo');
+
+    scan_info_div.innerText = msg.scanResults;
+  }
+
+  console.log("Got message from background page" + JSON.stringify(msg));
 });

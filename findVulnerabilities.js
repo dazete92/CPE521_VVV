@@ -25,8 +25,16 @@ function findXSS(document_root) {
     var inputs = '';
     var inputsCollection = document.getElementsByTagName("input");
     for (var i=0; i < inputsCollection.length; i++) {
-        inputsCollection[i].setAttribute("style", "outline: #00FF00 dotted thick;");
-
+        inputsCollection[i].setAttribute("style", "outline: #FF0000 ridge;");
+        inputsCollection[i].addEventListener("click", function(){ console.log("field pressed"); });
+        inputsCollection[i].addEventListener("click", function(){ 
+            chrome.runtime.sendMessage({from: "content_script",
+                                            clicked: true, 
+                                            detail_id: this.getAttribute('id'),  
+                                            detail_type: this.getAttribute('type'),
+                                            detail_content: this.outerHTML,
+                                            detail_vuln: "XSS"}); 
+        });
         //inputs += inputsCollection[i].outerHTML;
         //inputs += "\n";
     }
@@ -44,7 +52,7 @@ function findAuthentication(document_root) {
             inputsCollection[i].getAttribute('type') == "password" ||
             inputsCollection[i].getAttribute('type') == "username") {
             
-            inputsCollection[i].setAttribute("style", "outline: #0000FF dotted thick;");
+            inputsCollection[i].setAttribute("style", "outline: #FF0000 ridge;");
 
 
             //Wrap it in jquery and then add the qtip
@@ -70,10 +78,15 @@ function findSQLi(document_root) {
             inputsCollection[i].getAttribute('type') == "name" ||
             inputsCollection[i].getAttribute('type') == "location") {
 
-            inputsCollection[i].setAttribute("style", "outline: #FF0000 dotted thick;");
+            inputsCollection[i].setAttribute("style", "outline: #FF0000 ridge;");
             inputsCollection[i].addEventListener("click", function(){ console.log("field pressed"); });
             inputsCollection[i].addEventListener("click", function(){ 
-                chrome.runtime.sendMessage({clicked: true, extra: this.id}); 
+                chrome.runtime.sendMessage({from: "content_script",
+                                                clicked: true, 
+                                                detail_id: this.getAttribute('id'),  
+                                                detail_type: this.getAttribute('type'),
+                                                detail_content: this.outerHTML,
+                                                detail_vuln: "SQLi"}); 
             });
             //inputs += inputsCollection[i].outerHTML;
             //inputs += "\n";
@@ -89,7 +102,7 @@ function findForms(document_root) {
     var formsCollection = document.getElementsByTagName("form");
 
     for (var i=0; i < formsCollection.length; i++) {
-        formsCollection[i].setAttribute("style", "outline: #000000 dotted thick;");
+        formsCollection[i].setAttribute("style", "outline: #000000 dotted;");
 
         //inputs += inputsCollection[i].outerHTML;
         //inputs += "\n";
@@ -170,11 +183,19 @@ function addToolTips(document_root) {
     });
 }*/
 
+//start script
+/*
+var windowId;
+chrome.windows.getCurrent(function (window) {
+    windowId = window.id;
+});
+
+chrome.runtime.sendMessage({from_content_page: true, content_window_id: windowId});
+
+alert('started');
+*/
 discoverAttackSurface(document);
 
 /*
-chrome.runtime.sendMessage({
-    action: "getVulns",
-    source: discoverAttackSurface(document)
-});
+
 */
