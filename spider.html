@@ -1,0 +1,64 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Crawler Options</title>
+    <style>
+      body {
+        font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
+        font-size: 100%;
+      }
+      #status {
+        /* avoid an excessively wide status text */
+        white-space: pre;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        max-width: 200px;
+      }
+    </style>
+
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+    <script src="jquery.js"></script>
+    <script src="jquery.qtip.min.js"></script>
+    <script src="spider.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="jquery.qtip.min.css">
+
+
+  </head>
+  <body style="width:400px;">
+    <div id="content">
+    <div class="container" id="crawler-options">
+      <h3>Crawler Options</h3>
+      <form>
+      Max Depth:
+      <input type="text" id="depth"><br>
+      Max Children:
+      <input type="text" id="children"><br>
+      <input type="checkbox" id='recurse'>Recurse<br>
+      <input type="checkbox" id='referer'>Send 'Referer' header<br>
+      <input type="checkbox" id='process'>Process forms<br>
+      <input type="checkbox" id='processPost'  disabled="true">Process Post Forms<br>
+      <input type="checkbox" id='parseHtml'>Parse HTML Comments<br>
+      <input type="checkbox" id='parseRobots'>Parse 'robots.txt'<br>
+      <input type="checkbox" id='parseSitemap'>Parse 'sitemap.xml'<br>
+      <input type="checkbox" id='parseSvn'>Parse SVN metadata<br>
+      <input type="checkbox" id='parseGit'>Parse Git metadata<br>
+      <input type="checkbox" id='handleOData'>Handle OData parameters<br>  
+      <button class="btn-primary" type="button" id='crawl'>Crawl</button>
+      </form>
+    </div>
+  </body>
+</html>
+
