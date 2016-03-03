@@ -230,6 +230,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
+$(document).ready(function() 
+{
+  $('.topButton').click(function() {
+    if (!$(this).hasClass('clicked'))
+    {
+      $('.topButton').removeClass('clicked')
+      $(this).addClass('clicked')
+    }
+
+    if ($(this).is("#active"))
+    {
+      $('.activeOnly').removeAttr("disabled")
+      $('.activeBox').removeClass('deactivatedBox')
+      //TODO uncheck any active boxes that are checked
+    } else {
+      $('.activeOnly').attr("disabled", true);
+      $('.activeBox').addClass('deactivatedBox')
+    }
+  })
+});
+
+
+
 //Grab the current pages HTML
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.clicked) {
