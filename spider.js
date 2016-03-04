@@ -53,7 +53,7 @@
 
 var apiKey;
 var url;
-var childen = 0;
+var children = 0;
 var recurse = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
@@ -247,9 +247,19 @@ document.addEventListener('DOMContentLoaded', function() {
        url: 'http://localhost:8080/JSON/spider/action/scan/',
        data: restData,
        dataType: 'json',
-       success: function(data) {
-          console.log(data);
-          // use scan id to get info
+       success: function(scanId) {
+          console.log(scanId);
+          restData = 'scanId=' + scanId.scan
+          console.log(restData)
+          $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/JSON/spider/view/fullResults/',
+            data: restData,
+            dataType: 'json',
+            success: function(data) {
+              console.log(data.fullResults);
+       }
+    });
        }
     });
   })

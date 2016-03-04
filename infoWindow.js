@@ -208,11 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	})
 
 	$('#b4').click(function() {
-    console.log('Spider')
-    var w = 440;
-    var h = 220;
-    var left = (screen.width/2)-(w/2);
-    var top = (screen.height/2)-(h/2); 
+    var spiderURL = targetURL
 
     //chrome.windows.create({'url': 'spider.html', 'type': 'popup', 'width': w, 'height': h, 'left': left, 'top': top} , function(window) {
     chrome.tabs.create({'url': 'spider.html'} , function(tab) {
@@ -221,14 +217,9 @@ document.addEventListener('DOMContentLoaded', function() {
       // but the content script will not be loaded at that point, so we send
       // another here.
         setTimeout(function() {
-          chrome.tabs.sendMessage(tab.id, {key: keyArgument});
+          chrome.tabs.sendMessage(tab.id, {key: keyArgument, url: spiderURL});
         }, 500);
         console.log('loaded script in window');
-        setTimeout(function() {
-          getCurrentTabUrl(function(currentUrl) {
-            chrome.tabs.sendMessage(tab.id, {url: currentUrl});
-          });
-        }, 500);
       });
     })
 	})
