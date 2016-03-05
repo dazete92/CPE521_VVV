@@ -55,6 +55,7 @@ var apiKey;
 var url;
 var children = 0;
 var recurse = 0;
+var scanId = 0;
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -79,12 +80,40 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('children = ' + children)
   })
 
-  $('#recurse').click(function() {
+  $('#enable').click(function() {
+    document.getElementById("recurse").checked = true;
+    document.getElementById("referer").checked = true;
+    document.getElementById("process").checked = true;
+    document.getElementById("processPost").checked = true;
+    document.getElementById("parseHtml").checked = true;
+    document.getElementById("parseRobots").checked = true;
+    document.getElementById("parseSitemap").checked = true;
+    document.getElementById("parseSvn").checked = true;
+    document.getElementById("parseGit").checked = true;
+    document.getElementById("handleOData").checked = true;
+    changeAll();
+  })
+
+  $('#disable').click(function() {
+    document.getElementById("recurse").checked = false;
+    document.getElementById("referer").checked = false;
+    document.getElementById("process").checked = false;
+    document.getElementById("processPost").checked = false;
+    document.getElementById("parseHtml").checked = false;
+    document.getElementById("parseRobots").checked = false;
+    document.getElementById("parseSitemap").checked = false;
+    document.getElementById("parseSvn").checked = false;
+    document.getElementById("parseGit").checked = false;
+    document.getElementById("handleOData").checked = false;
+    changeAll();
+  })
+
+  $('#recurse').change(function() {
     recurse = ($(this).is(':checked') ? 1 : 0)
     console.log('recurse = ' + recurse)
   })
 
-  $('#referer').click(function() {
+  $('#referer').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -98,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-	$('#process').click(function() { 
+	$('#process').change(function() { 
     if ($(this).is(':checked')) {
       var restData = apiKey + '&Boolean=true';
       console.log(restData)
@@ -141,7 +170,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 	})
 
-  $('#processPost').click(function() {
+  $('#processPost').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -155,7 +184,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#parseHtml').click(function() {
+  $('#parseHtml').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -169,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#parseRobots').click(function() {
+  $('#parseRobots').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -183,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#parseSitemap').click(function() {
+  $('#parseSitemap').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -197,7 +226,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#parseSvn').click(function() {
+  $('#parseSvn').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -211,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#parseGit').click(function() {
+  $('#parseGit').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -225,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#handleOData').click(function() {
+  $('#handleOData').change(function() {
     var restData = apiKey + '&Boolean=' + ($(this).is(':checked') ? true : false);
     console.log(restData)
     $.ajax({
@@ -247,23 +276,12 @@ document.addEventListener('DOMContentLoaded', function() {
        url: 'http://localhost:8080/JSON/spider/action/scan/',
        data: restData,
        dataType: 'json',
-       success: function(scanId) {
-          console.log(scanId);
-          restData = 'scanId=' + scanId.scan
-          console.log(restData)
-          $.ajax({
-            type: 'GET',
-            url: 'http://localhost:8080/JSON/spider/view/fullResults/',
-            data: restData,
-            dataType: 'json',
-            success: function(data) {
-              console.log(data.fullResults);
-       }
-    });
+       success: function(data) {
+          scanId = 'scanId=' + data.scan;
+          statusBar(scanId);
        }
     });
   })
-
 });
 
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
@@ -276,3 +294,58 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     url = msg.url
   }
 });
+
+function statusBar(scanId) {
+  var elem = document.getElementById("myBar");   
+  var percent = 10;
+  var id = setInterval(frame, 100);
+  function frame() {
+    if (percent >= 100) {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/JSON/spider/view/fullResults/',
+        data: scanId,
+        dataType: 'json',
+        success: function(data) {
+          parseOutput(data.fullResults);
+        }
+      });
+      elem.style.width = '5%'; 
+      document.getElementById("label").innerHTML = '0%';
+      clearInterval(id);
+    } 
+    else {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/JSON/spider/view/status/',
+        data: scanId,
+        dataType: 'json',
+        success: function(data) {
+          percent = data.status;
+          elem.style.width = data.status + '%'; 
+          document.getElementById("label").innerHTML = data.status * 1  + '%';
+        }
+       }); 
+    }
+  }
+}
+
+function parseOutput(data) {
+  urlsInScope = data[0].urlsInScope;
+  urlsOutOfScope = data[1].urlsOutOfScope;
+  console.log(urlsInScope);
+  console.log(urlsOutOfScope);
+}
+
+function changeAll() {
+  $('#recurse').trigger("change");
+  $('#referer').trigger("change");
+  $('#process').trigger("change");
+  $('#processPost').trigger("change");
+  $('#parseHtml').trigger("change");
+  $('#parseRobots').trigger("change");
+  $('#parseSitemap').trigger("change");
+  $('#parseGit').trigger("change");
+  $('#parseSvn').trigger("change");
+  $('#handleOData').trigger("change");
+}
