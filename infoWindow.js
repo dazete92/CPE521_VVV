@@ -217,7 +217,7 @@ document.addEventListener('DOMContentLoaded', function() {
       // but the content script will not be loaded at that point, so we send
       // another here.
         setTimeout(function() {
-          chrome.tabs.sendMessage(tab.id, {key: keyArgument, url: spiderURL});
+          chrome.tabs.sendMessage(tab.id, {homeTab: myTabId, key: keyArgument, url: spiderURL});
         }, 500);
         console.log('loaded script in window');
       });
@@ -309,6 +309,10 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     var scan_info_div = document.getElementById('scanInfo');
 
     scan_info_div.innerText = msg.scanResults;
+  }
+  if (msg.spiderResults) {
+    var crawler_data_div = document.getElementById('crawler_data');
+    crawler_data_div.innerText = msg.spiderResults;
   }
 
   console.log("Got message from background page" + JSON.stringify(msg));

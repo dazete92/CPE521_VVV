@@ -56,6 +56,7 @@ var url;
 var children = 0;
 var recurse = 0;
 var scanId = 0;
+var mainTab;
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -81,30 +82,12 @@ document.addEventListener('DOMContentLoaded', function() {
   })
 
   $('#enable').click(function() {
-    document.getElementById("recurse").checked = true;
-    document.getElementById("referer").checked = true;
-    document.getElementById("process").checked = true;
-    document.getElementById("processPost").checked = true;
-    document.getElementById("parseHtml").checked = true;
-    document.getElementById("parseRobots").checked = true;
-    document.getElementById("parseSitemap").checked = true;
-    document.getElementById("parseSvn").checked = true;
-    document.getElementById("parseGit").checked = true;
-    document.getElementById("handleOData").checked = true;
+    setChecked(true);
     changeAll();
   })
 
   $('#disable').click(function() {
-    document.getElementById("recurse").checked = false;
-    document.getElementById("referer").checked = false;
-    document.getElementById("process").checked = false;
-    document.getElementById("processPost").checked = false;
-    document.getElementById("parseHtml").checked = false;
-    document.getElementById("parseRobots").checked = false;
-    document.getElementById("parseSitemap").checked = false;
-    document.getElementById("parseSvn").checked = false;
-    document.getElementById("parseGit").checked = false;
-    document.getElementById("handleOData").checked = false;
+    setChecked(false);
     changeAll();
   })
 
@@ -284,17 +267,6 @@ document.addEventListener('DOMContentLoaded', function() {
   })
 });
 
-chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
-  if (msg.key) {
-    console.log("Got message from background page: " + msg.key);
-    apiKey = msg.key;
-  }
-  if (msg.url) {
-    console.log("Got message from background page: " + msg.url);
-    url = msg.url
-  }
-});
-
 function statusBar(scanId) {
   var elem = document.getElementById("myBar");   
   var percent = 10;
@@ -331,10 +303,33 @@ function statusBar(scanId) {
 }
 
 function parseOutput(data) {
-  urlsInScope = data[0].urlsInScope;
-  urlsOutOfScope = data[1].urlsOutOfScope;
-  console.log(urlsInScope);
-  console.log(urlsOutOfScope);
+  var links = [];
+  var urlsInScope = data[0].urlsInScope;
+  var urlsOutOfScope = data[1].urlsOutOfScope;
+
+  urlsInScope.forEach(function(value) {
+    links.push(value.url + "\n");
+    console.log(value.url);
+  });
+  urlsOutOfScope.forEach(function(value) {
+    links.push(value + "\n");
+    console.log(value);
+  });
+
+  chrome.tabs.sendMessage(mainTab, {spiderResults: links.join("")});
+}
+
+function setChecked(value) {
+  document.getElementById("recurse").checked = value;
+  document.getElementById("referer").checked = value;
+  document.getElementById("process").checked = value;
+  document.getElementById("processPost").checked = value;
+  document.getElementById("parseHtml").checked = value;
+  document.getElementById("parseRobots").checked = value;
+  document.getElementById("parseSitemap").checked = value;
+  document.getElementById("parseSvn").checked = value;
+  document.getElementById("parseGit").checked = value;
+  document.getElementById("handleOData").checked = value;
 }
 
 function changeAll() {
@@ -349,3 +344,20 @@ function changeAll() {
   $('#parseSvn').trigger("change");
   $('#handleOData').trigger("change");
 }
+
+chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
+  if (msg.key) {
+    console.log("Got message from background page: " + msg.key);
+    apiKey = msg.key;
+  }
+  if (msg.url) {
+    console.log("Got message from background page: " + msg.url);
+    url = msg.url
+    var spiderUrl = document.getElementById('url_spider');
+    spiderUrl.value = url;
+  }
+  if (msg.homeTab) {
+    mainTab = msg.homeTab;
+    console.log('homeTab=' + msg.homeTab);
+  }
+});
