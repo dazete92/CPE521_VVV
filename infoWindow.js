@@ -352,7 +352,7 @@ $(document).ready(function()
 
   $('.zapButton').click(function() {
     //ZAP BUTTON STUFF GOES HERE
-  }
+  })
 });
 
 //Grab the current pages HTML
