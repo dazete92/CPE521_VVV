@@ -3,8 +3,8 @@ body {
 }
 
 .container {
-	padding: 10px;
-	margin: 20px;
+	padding: 5px;
+	margin: 10px;
 }
 
 #passive-tools {
@@ -28,32 +28,28 @@ ul {
 }
 
 #leftBot {
+    float: left;
     background:rgba(255,255,0,0.3); /* light green */
-    overflow: auto;
-    height: 150px;
-    width: 100%;
+    height: 240px;
+    width: 49%;
 }
 
 #rightBot {
+    float: left;
     background:rgba(235,80,150,0.3); /* salmon */
-    overflow: auto;
-    height: 150px;
-    width: 100%;
+    height: 240px;
+    width: 49%;
 }
 
 #mid {
+    float: left;
     background:rgba(0,0,255,0.3);
     height: 130px;
-    overflow: auto;
+    width: 100%
 }
 
 #botContainer {
     width: 100%; /* or whatever width you want. */
-}
-
-#botContainers {
-	display: inline;
-    overflow: auto;
 }
 
 .zapButton {

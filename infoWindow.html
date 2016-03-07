@@ -38,7 +38,6 @@
 
   </head>
   <body>
-
   <div id="topContainer" class="container">
     <ul id="topBar">
       <li class='topButton clicked' id='passive'>Passive</li>
@@ -53,7 +52,39 @@
       <li><input type="checkbox" class="checkbox" id='zapPassive'>View ZAP Alerts for Current Page</li>
     </ul>
   </div>
-  <ul id='botContainers'>
+  <ul id='botContainers' style="display:inline-block; width: 100%">
+      <li class='botContainer' id="leftBot">
+          <h4 id="activePageTitle">Active Page: </h4>
+          <h4>Selected Details</h4>
+          <ul id="selectedDetails">
+            <li class='detail' id='detailVuln'>Potentially Vulnerable To: </li>
+            <li class='detail' id='detailType'>Type: </li>
+            <li class='detail' id='detailId'>ID: </li>
+            <li class='detail' id='detailContent'>Content:
+              <ul id='contentScroll' style="overflow: auto; height: 60px; width: 80%; border: solid;">
+                <li>Test1</li>
+                <li>Test2</li>
+                <li>Test3</li>
+                <li>Test4</li>
+              </ul>
+            </li>
+          </ul>
+      </li>
+      <li class='botContainer' id='rightBot'>
+          <h4>Page Details</h4>
+          <ul id="pageDetails">
+            <li class='detail' id='pageCookies'>Cookies: 
+                <ul id='cookiesScroll' style="overflow: auto; height: 60px; width: 80%; border: solid;">
+                  <li>Test1</li>
+                  <li>Test2</li>
+                  <li>Test3</li>
+                  <li>Test4</li>
+                </ul>
+            </li>
+            <li class='detail' id='pageHeader'>Header Info: </li>
+            <li class='detail' id='pageUrlParams'>URL Params: </li>\
+          </ul>
+      </li>
     <li class='botContainer' id='mid'>
       <h4>Page Alerts</h4>
       <div id="passiveAlerts">
@@ -61,26 +92,6 @@
           <li class='detail' id='passiveAlerts'> </li>
         </ul>
       </div>
-    </li>
-    <li>
-        <li class='botContainer' id="leftBot">
-            <h4 id="activePageTitle">Active Page: </h4>
-            <h4>Selected Details</h4>
-            <ul id="selectedDetails">
-              <li class='detail' id='detailVuln'>Potentially Vulnerable To: </li>
-              <li class='detail' id='detailType'>Type: </li>
-              <li class='detail' id='detailId'>ID: </li>
-              <li class='detail' id='detailContent'>Content: </li>
-            </ul>
-        </li>
-        <li class='botContainer' id='rightBot'>
-            <h4>Page Details</h4>
-            <ul id="pageDetails">
-              <li class='detail' id='pageCookies'>Cookies: </li>
-              <li class='detail' id='pageHeader'>Header Info: </li>
-              <li class='detail' id='pageUrlParams'>URL Params: </li>\
-            </ul>
-        </li>
     </li>
   </ul>
 <!--
