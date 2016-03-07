@@ -25,20 +25,23 @@ ul {
 
 #topContainer {
     background:rgba(192,192,192,0.3); /* light green */
+    margin: 0;
+    padding: 0;
+    width: 100%;
 }
 
 #leftBot {
     float: left;
     background:rgba(255,255,0,0.3); /* light green */
     height: 240px;
-    width: 49%;
+    width: 50%;
 }
 
 #rightBot {
     float: left;
     background:rgba(235,80,150,0.3); /* salmon */
     height: 240px;
-    width: 49%;
+    width: 50%;
 }
 
 #mid {
@@ -50,6 +53,11 @@ ul {
 
 #botContainer {
     width: 100%; /* or whatever width you want. */
+}
+
+#botContainers {
+    padding: 0;
+    margin: 0;
 }
 
 .zapButton {

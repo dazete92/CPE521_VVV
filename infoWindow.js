@@ -365,7 +365,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
     var detail_id = document.getElementById('detailId');
     var detail_type = document.getElementById('detailType');
-    var detail_content = document.getElementById('detailContent');
+    var detail_content = document.getElementById('contentScroll');
     var detail_vuln = document.getElementById('detailVuln');
 
     detail_id.innerText = "ID: " + msg.detail_id;
