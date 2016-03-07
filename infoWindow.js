@@ -389,7 +389,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   }
 
   if (msg.cookies) {
-    document.getElementById('pageCookies').innerText = "Cookies: " + msg.cookies;
+    document.getElementById('cookiesScroll').innerText = "Cookies: " + msg.cookies;
   }
 
   /*if (msg.spiderResults) {
