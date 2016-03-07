@@ -30,13 +30,15 @@ ul {
 #leftBot {
     background:rgba(255,255,0,0.3); /* light green */
     overflow: auto;
-    height: 130px;
+    height: 150px;
+    width: 100%;
 }
 
 #rightBot {
     background:rgba(235,80,150,0.3); /* salmon */
     overflow: auto;
-    height: 130px;
+    height: 150px;
+    width: 100%;
 }
 
 #mid {
