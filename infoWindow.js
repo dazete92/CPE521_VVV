@@ -124,34 +124,66 @@ function getZAPMessages(url, alertNum, callback) {
 	});
 }
 
+function makeOrderedList(alerts) {
+  var container = document.getElementById('passiveAlerts');
+  var alertList = document.createElement('ol');
+  alertList.className = "alertList";
+  alertList.type = "1";
+  container.appendChild(alertList);
+
+  alerts.forEach(function (alert) {
+    var alertName = document.createElement('li');
+    alertName.appendChild(document.createTextNode(alert.alert));
+
+    var eulist = document.createElement('ul');
+
+    $.each(alert, function (field) {
+      if (field == "other" || field == "solution" ||
+        field == "reference" || field == "description" || field == "risk") {
+          //console.log(field);
+          var item = document.createElement('li');
+          item.appendChild(document.createTextNode(field + ": " + alert[field]));
+          eulist.appendChild(item);
+      }
+    });
+
+    alertName.addEventListener("click", function () {
+      $(this).find('ul').slideToggle();
+    });
+
+    eulist.style.cssText = 'display: none;'
+    alertName.appendChild(eulist);
+    alertList.appendChild(alertName);
+  });
+
+}
+
+//interactions with the HTML
 document.addEventListener('DOMContentLoaded', function() {
-
-
-   var key, keyArgument;
+   var key;
+   //var keyArgument;
    var alerts, messages;
    var json, obj;
 
-   var jsonData = 'apikey=123';
+   var keyArgument = 'apikey=123';
 
-   scanInfo.innerText = localStorage.savedText;
+   //scanInfo.innerText = localStorage.savedText;
 
-	$('#findVulnBtn').click(function() { 
-		chrome.tabs.executeScript(null, {
+	$('#findVulnBtn').click(function() {
+
+    //inject script into last known tab
+    console.log("scan" + lastActiveTab);
+		chrome.tabs.executeScript(lastActiveTab, {
     file: "findVulnerabilities.js"
     }, function(results) {
       // If you try and inject into an extensions page or the webstore/NTP you'll get an error
       if (chrome.runtime.lastError) {
         scanInfo.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
       }
-      else {
-        scanInfo.innerText += ('\n' + results);
-        localStorage.savedText = results;
-        //addXSSToolTips()
-      }
     });
   })
 
-  $('#enable-active').click(function() {
+  /*$('#enable-active').click(function() {
     if (!$('#active-buttons').is(":visible")) {
       //if (confirm("You're about to enable some invasive tools. Are you sure this website is down with that?")) {
         //Do velociraptor sound byte
@@ -187,48 +219,115 @@ document.addEventListener('DOMContentLoaded', function() {
 		      console.log(data);
 		   }
 		});	
-	})
+	})*/
 
-	$('#b3').click(function() {
+	$('#zapPassive').click(function() {
 		console.log('clicked button 3')
-      getCurrentTabUrl(function(url) {
-         var parser = document.createElement('a')
-         parser.href = url
-         baseUrl = "http://" + parser.hostname + '/'
-         getZAPNumberAlerts(baseUrl, function(data) {
-            getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
-               console.log(zapAlerts.alerts)
-            });
-         })
 
-         getZAPNumberMessages(baseUrl, function(data) {
-            getZAPMessages(baseUrl, data.numberOfMessages, function(zapMessages) {
-               console.log(zapMessages.messages)
+    if($(this).is(':checked')) {
+       var parser = document.createElement('a');
+       parser.href = targetURL;
+       var baseUrl = "http://" + parser.hostname;
+
+       getZAPNumberAlerts(baseUrl, function(data) {
+          getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
+            var results = zapAlerts.alerts;
+            var alerts = [];
+
+            results.forEach(function(alert) {
+              if (alert.url == targetURL) {
+                console.log(alert);
+                alerts.push(alert);
+              }
             });
-         })
+            //var passive_alerts = document.getElementById('passiveAlerts');
+            //passive_alerts.innerText = alerts.join("");
+            makeOrderedList(alerts);
+          });
+       })
+    }
+    else {
+      var node = document.getElementById('passiveAlerts');
+      while (node.firstChild) {
+        node.removeChild(node.firstChild);
+      }
+    }
+
+     /*getZAPNumberMessages(baseUrl, function(data) {
+        getZAPMessages(baseUrl, data.numberOfMessages, function(zapMessages) {
+           console.log(zapMessages.messages)
+        });
+     })*/
+	})
+
+	$('#crawl').click(function() {
+    var spiderURL = targetURL
+
+    //chrome.windows.create({'url': 'spider.html', 'type': 'popup', 'width': w, 'height': h, 'left': left, 'top': top} , function(window) {
+    chrome.tabs.create({'url': 'spider.html'} , function(tab) {
+      chrome.tabs.executeScript(tab.id, {file: "spider.js"}, function() {
+      // Note: we also sent a message above, upon loading the event page,
+      // but the content script will not be loaded at that point, so we send
+      // another here.
+        setTimeout(function() {
+          chrome.tabs.sendMessage(tab.id, {homeTab: myTabId, key: keyArgument, url: spiderURL});
+        }, 500);
+        console.log('loaded script in window');
       });
+    })
 	})
 
-	$('#b4').click(function() {
-		console.log('clicked button 4')
-		$.ajax({
-		   type: 'GET',
-		   url: 'http://localhost:8080/JSON/pscan/view/scanners/',
-		   dataType: 'json',
-		   success: function(data) {
-		      console.log(data);
-		   }
-		});	
-	})
-
-	$('#b5').click(function() {
+	$('#ZAPClick').click(function() {
 		console.log('clicked button 5')
-      key = Math.random().toString(16).slice(2)
-      keyArgument = "apikey=" + key
-      alert(keyArgument + '\n\n' + "Initialize ZAP Instance: > ./zap.sh -daemon -config api.key=<key>")
+    key = Math.random().toString(16).slice(2)
+    keyArgument = "apikey=" + key
+    prompt("Use this command to start ZAP:", "./zap.sh -daemon -config api.key=" + key)
+    document.getElementById('ZAPClick').disabled = true;
 	})
 
 });
+
+//check for new tabs
+var lastActiveTab;
+var myTabId;
+
+chrome.tabs.onActivated.addListener(function(activeInfo) {
+  chrome.tabs.getCurrent(function(tab){myTabId = tab.id;});
+  if (myTabId && activeInfo.tabId != myTabId) {
+    lastActiveTab = activeInfo.tabId;
+    scanPage();
+    console.log("lastActive: " + lastActiveTab + ", my: " + myTabId);
+  }
+});
+
+chrome.windows.onFocusChanged.addListener(function(windowId) {
+  if (windowId != -1) {
+    chrome.tabs.query({'windowId': windowId, 'active': true}, function(tabs) {
+      if (myTabId && tabs[0].id != myTabId) {
+        lastActiveTab = tabs[0].id;
+        scanPage();
+        console.log("window focus change - lastActive: " + lastActiveTab + ", my: " + myTabId);
+      }
+      //console.log("window id:" + windowId);
+    }); 
+  }
+});
+
+function scanPage() {
+  console.log()
+  if (document.getElementById('passiveScan').checked) {
+    //inject scri`pt into last known tab
+    console.log("scan" + lastActiveTab);
+    chrome.tabs.executeScript(lastActiveTab, {
+    file: "findVulnerabilities.js"
+    }, function(results) {
+      // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+      if (chrome.runtime.lastError) {
+        scanInfo.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+      }
+    });
+  }
+}
 
 $(document).ready(function() 
 {
@@ -246,6 +345,7 @@ $(document).ready(function()
       //TODO uncheck any active boxes that are checked
     } else {
       $('.activeOnly').attr("disabled", true);
+      $('.activeOnly').attr("checked", false);
       $('.activeBox').addClass('deactivatedBox')
     }
   })
@@ -255,12 +355,47 @@ $(document).ready(function()
   }
 });
 
-
-
 //Grab the current pages HTML
+var contentWindowId;
+var targetURL;
+
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.clicked) {
-    messages.innerText += ("\nYou clicked SQLi field with ID: " + msg.extra);
+    console.log(msg);
+
+    var detail_id = document.getElementById('detailId');
+    var detail_type = document.getElementById('detailType');
+    var detail_content = document.getElementById('detailContent');
+    var detail_vuln = document.getElementById('detailVuln');
+
+    detail_id.innerText = "ID: " + msg.detail_id;
+    detail_type.innerText = "Type: " + msg.detail_type;
+    detail_content.innerText = "Content: " + msg.detail_content;
+    detail_vuln.innerText = "Likely Vulnerable To: " + msg.detail_vuln;
   }
-  console.log("Got message from background page: " + msg);
+  if (msg.content_window_id) {
+    contentWindowId = msg.content_window_id;
+    console.log("window id: " + contentWindowId);
+  }
+  if (msg.target_url) {
+    targetURL = msg.target_url;
+    console.log("tab url: " + targetURL);
+    document.getElementById('activePageTitle').innerText = "Active Page: " + targetURL;
+  }
+  if (msg.scanResults) {
+    var scan_info_div = document.getElementById('scanInfo');
+
+    scan_info_div.innerText = msg.scanResults;
+  }
+
+  if (msg.cookies) {
+    document.getElementById('pageCookies').innerText = "Cookies: " + msg.cookies;
+  }
+
+  /*if (msg.spiderResults) {
+    var crawler_data_div = document.getElementById('crawler_data');
+    crawler_data_div.innerText = msg.spiderResults;
+  }*/
+
+  console.log("Got message from background page" + JSON.stringify(msg));
 });

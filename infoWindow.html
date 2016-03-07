@@ -37,7 +37,7 @@
 
 
   </head>
-
+  <body>
 
   <div id="topContainer" class="container">
     <ul id="topBar">
@@ -47,24 +47,42 @@
     </ul>
     <h3>Tools</h3>
     <ul class="toolCheckbox">
-      <li><input type="checkbox" class="checkbox" id='passiveScan'>Passive Scan</li>
-      <li><input type="checkbox" class="checkbox" id='crawl'>Crawl</li>
-      <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='zapActive' disabled="true">ZAP Active Scan</li>
-      <li><input type="checkbox" class="checkbox" id='zapPassive'>ZAP Passive</li>
+    <li><input type="checkbox" class="checkbox" id='passiveScan'>Passive Scan</li>
+    <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='crawl' disabled="true">Crawl</li>
+    <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='zapActive' disabled="true">ZAP Active Scan</li>
+    <li><input type="checkbox" class="checkbox" id='zapPassive'>View ZAP Alerts for Current Page</li>
     </ul>
 
   </div>
-  
-  <ul id=botContainers>
+  <ul id='botContainers'>
     <li style="float:left" class='botContainer'>
-        Test1
+        <h5 id="activePageTitle">Active Page: </h2>
+        Selected Details
+        <ul id="selectedDetails">
+          <li class='detail' id='detailVuln'>Potentially Vulnerable To: </li>
+          <li class='detail' id='detailType'>Type: </li>
+          <li class='detail' id='detailId'>ID: </li>
+          <li class='detail' id='detailContent'>Content: </li>
+        </ul>
     </li>
     <li style="float:left" class='botContainer'>
-        Test2
+        Page Details
+        <ul id="pageDetails">
+          <li class='detail' id='pageCookies'>Cookies: </li>
+          <li class='detail' id='pageHeader'>Header Info: </li>
+          <li class='detail' id='pageUrlParams'>URL Params: </li>\
+        </ul>
+    </li>
+    <li li style="float:left" class='botContainer'> </li>
+      Page Alerts
+      <div id="passiveAlerts" class="container">
+<!--         <ul id="pageAlerts">
+          <li class='detail' id='passiveAlerts'> </li>
+        </ul>  -->
+      </div>
     </li>
   </ul>
-
-
+<!--
 
 
 
@@ -92,12 +110,20 @@
       <button class="btn-primary" type="button" id="enable-active">Enable Active Capabilities</button><br><br>
       <div id='active-buttons' style='display: none'>
         <button class="btn-primary" type="button" id='b3'>Option 3</button><br><br>
-        <button class="btn-primary" type="button" id='b4'>Option 4</button>
+        <button class="btn-primary" type="button" id='b4'>Spider</button>
       </div>
     </div>
 
-    <div id='messages'> Messages: </div>
+    <div id='messages'> Element Details </div>
+      <p>Type:</p> <p id='detail_type'> unsure </p>
+      <p>ID:</p> <p id='detail_id'> unsure </p>
+      <p>Content:</p> <p id='detail_content'> unsure </p>
+      <p>Most Likely Vulnerable To: </p> <p id='detail_vuln'> unsure </p>
     <div id='scanInfo'> Scan Info: </div>
+      <p>Scan Data:</p> <p id='scan_data'> unsure </p>
+      <p>Crawler Data:</p> <p id='crawler_data'> unsure </p>
   </body>
 </html>
-
+-->
+</body>
+</html>
