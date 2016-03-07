@@ -207,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function() {
       });
 	})
 
-	$('#b4').click(function() {
+	$('#crawl').click(function() {
     var spiderURL = targetURL
 
     //chrome.windows.create({'url': 'spider.html', 'type': 'popup', 'width': w, 'height': h, 'left': left, 'top': top} , function(window) {
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
     })
 	})
 
-	$('#b5').click(function() {
+	$('#ZAPClick').click(function() {
 		console.log('clicked button 5')
     key = Math.random().toString(16).slice(2)
     keyArgument = "apikey=" + key
