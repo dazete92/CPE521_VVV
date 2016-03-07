@@ -249,6 +249,10 @@ $(document).ready(function()
       $('.activeBox').addClass('deactivatedBox')
     }
   })
+
+  $('.zapButton').click(function() {
+    //ZAP BUTTON STUFF GOES HERE
+  }
 });
 
 
