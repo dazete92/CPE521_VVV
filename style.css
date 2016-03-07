@@ -39,6 +39,12 @@ ul {
     background:rgba(0,0,255,0.3);
 }
 
+#botContainer {
+    width: 100%; /* or whatever width you want. */
+    max-width:250px; /* or whatever width you want. */
+    display: inline-block;
+}
+
 #botContainers {
 	display: inline;
 }
