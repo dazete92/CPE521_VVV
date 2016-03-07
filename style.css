@@ -31,14 +31,14 @@ ul {
     background:rgba(255,255,0,0.3); /* light green */
     overflow: auto;
     height: 150px;
-    width: 50%;
+    width: 100%;
 }
 
 #rightBot {
     background:rgba(235,80,150,0.3); /* salmon */
     overflow: auto;
     height: 150px;
-    width: 50%;
+    width: 100%;
 }
 
 #mid {
