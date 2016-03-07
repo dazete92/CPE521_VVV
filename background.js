@@ -37,6 +37,7 @@ chrome.browserAction.onClicked.addListener(function() {
   });
 
   //inject script into page we want to scan
+  /*
   chrome.tabs.executeScript(null, {
     file: "findVulnerabilities.js"
     }, function(results) {
@@ -48,6 +49,7 @@ chrome.browserAction.onClicked.addListener(function() {
         startText = results;
       }
     });
+*/
 
   //open info window
   chrome.tabs.create({url: "infoWindow.html"}, function(tab) {

@@ -3,7 +3,7 @@
 
 //main method
 function discoverAttackSurface(document_root) {
-    var text = ''
+    var text = '';
 
     //run findXSS before other functions so that other functions
     //add their border after findXSS does
@@ -16,7 +16,7 @@ function discoverAttackSurface(document_root) {
     text += getHttpHeader(document_root);
     //addToolTips(document_root)
 
-    return text;
+    //return text;
 }
 
 //vuln finding methods
@@ -131,7 +131,11 @@ function findSession(document_root) {
     if (sessionCookies.length > 0)
         sessionCookies = 'Session Cookies:\n' + sessionCookies;
     else
-        sessionCookies = ''
+        sessionCookies = '';
+
+    chrome.runtime.sendMessage({from: "content_script", 
+                                cookies: document.cookie,
+                                session: sessionCookies}); 
 
     return sessionCookies;
 }
