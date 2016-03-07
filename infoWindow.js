@@ -126,11 +126,12 @@ function getZAPMessages(url, alertNum, callback) {
 
 //interactions with the HTML
 document.addEventListener('DOMContentLoaded', function() {
-   var key, keyArgument;
+   var key;
+   //var keyArgument;
    var alerts, messages;
    var json, obj;
 
-   var jsonData = 'apikey=123';
+   var keyArgument = 'apikey=123';
 
    //scanInfo.innerText = localStorage.savedText;
 
@@ -207,22 +208,28 @@ document.addEventListener('DOMContentLoaded', function() {
 	})
 
 	$('#b4').click(function() {
-		console.log('clicked button 4')
-		$.ajax({
-		   type: 'GET',
-		   url: 'http://localhost:8080/JSON/pscan/view/scanners/',
-		   dataType: 'json',
-		   success: function(data) {
-		      console.log(data);
-		   }
-		});	
+    var spiderURL = targetURL
+
+    //chrome.windows.create({'url': 'spider.html', 'type': 'popup', 'width': w, 'height': h, 'left': left, 'top': top} , function(window) {
+    chrome.tabs.create({'url': 'spider.html'} , function(tab) {
+      chrome.tabs.executeScript(tab.id, {file: "spider.js"}, function() {
+      // Note: we also sent a message above, upon loading the event page,
+      // but the content script will not be loaded at that point, so we send
+      // another here.
+        setTimeout(function() {
+          chrome.tabs.sendMessage(tab.id, {homeTab: myTabId, key: keyArgument, url: spiderURL});
+        }, 500);
+        console.log('loaded script in window');
+      });
+    })
 	})
 
 	$('#b5').click(function() {
 		console.log('clicked button 5')
-      key = Math.random().toString(16).slice(2)
-      keyArgument = "apikey=" + key
-      alert(keyArgument + '\n\n' + "Initialize ZAP Instance: > ./zap.sh -daemon -config api.key=<key>")
+    key = Math.random().toString(16).slice(2)
+    keyArgument = "apikey=" + key
+    prompt("Use this command to start ZAP:", "./zap.sh -daemon -config api.key=" + key)
+    document.getElementById('b5').disabled = true;
 	})
 
 });
@@ -322,8 +329,14 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
     scan_info_div.innerText = msg.scanResults;
   }
+
   if (msg.cookies) {
     document.getElementById('pageCookies').innerText = "Cookies: " + msg.cookies;
+  }
+
+  if (msg.spiderResults) {
+    var crawler_data_div = document.getElementById('crawler_data');
+    crawler_data_div.innerText = msg.spiderResults;
   }
 
   console.log("Got message from background page" + JSON.stringify(msg));
