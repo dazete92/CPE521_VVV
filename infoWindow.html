@@ -37,7 +37,7 @@
 
 
   </head>
-
+  <body>
 
   <div id="topContainer" class="container">
     <ul id="topBar">
@@ -48,13 +48,13 @@
     <h3>Tools</h3>
     <ul class="toolCheckbox">
     <li><input type="checkbox" class="checkbox" id='passiveScan'>Passive Scan</li>
-    <li><input type="checkbox" class="checkbox" id='crawl'>Crawl</li>
+    <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='crawl' disabled="true">Crawl</li>
     <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='zapActive' disabled="true">ZAP Active Scan</li>
-    <li><input type="checkbox" class="checkbox" id='zapPassive'>ZAP Passive</li>
+    <li><input type="checkbox" class="checkbox" id='zapPassive'>View ZAP Alerts for Current Page</li>
     </ul>
 
   </div>
-  <ul id=botContainers>
+  <ul id='botContainers'>
     <li style="float:left" class='botContainer'>
         <h5 id="activePageTitle">Active Page: </h2>
         Selected Details
@@ -73,8 +73,15 @@
           <li class='detail' id='pageUrlParams'>URL Params: </li>\
         </ul>
     </li>
+    <li li style="float:left" class='botContainer'> </li>
+      Page Alerts
+      <div id="passiveAlerts" class="container">
+<!--         <ul id="pageAlerts">
+          <li class='detail' id='passiveAlerts'> </li>
+        </ul>  -->
+      </div>
+    </li>
   </ul>
-
 <!--
 
 
@@ -118,3 +125,5 @@
   </body>
 </html>
 -->
+</body>
+</html>

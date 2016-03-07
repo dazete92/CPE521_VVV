@@ -124,6 +124,40 @@ function getZAPMessages(url, alertNum, callback) {
 	});
 }
 
+function makeOrderedList(alerts) {
+  var container = document.getElementById('passiveAlerts');
+  var alertList = document.createElement('ol');
+  alertList.className = "alertList";
+  alertList.type = "1";
+  container.appendChild(alertList);
+
+  alerts.forEach(function (alert) {
+    var alertName = document.createElement('li');
+    alertName.appendChild(document.createTextNode(alert.alert));
+
+    var eulist = document.createElement('ul');
+
+    $.each(alert, function (field) {
+      if (field == "other" || field == "solution" ||
+        field == "reference" || field == "description" || field == "risk") {
+          //console.log(field);
+          var item = document.createElement('li');
+          item.appendChild(document.createTextNode(field + ": " + alert[field]));
+          eulist.appendChild(item);
+      }
+    });
+
+    alertName.addEventListener("click", function () {
+      $(this).find('ul').slideToggle();
+    });
+
+    eulist.style.cssText = 'display: none;'
+    alertName.appendChild(eulist);
+    alertList.appendChild(alertName);
+  });
+
+}
+
 //interactions with the HTML
 document.addEventListener('DOMContentLoaded', function() {
    var key;
@@ -149,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#enable-active').click(function() {
+  /*$('#enable-active').click(function() {
     if (!$('#active-buttons').is(":visible")) {
       //if (confirm("You're about to enable some invasive tools. Are you sure this website is down with that?")) {
         //Do velociraptor sound byte
@@ -185,26 +219,45 @@ document.addEventListener('DOMContentLoaded', function() {
 		      console.log(data);
 		   }
 		});	
-	})
+	})*/
 
-	$('#b3').click(function() {
+	$('#zapPassive').click(function() {
 		console.log('clicked button 3')
-      getCurrentTabUrl(function(url) {
-         var parser = document.createElement('a')
-         parser.href = url
-         baseUrl = "http://" + parser.hostname + '/'
-         getZAPNumberAlerts(baseUrl, function(data) {
-            getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
-               console.log(zapAlerts.alerts)
-            });
-         })
 
-         getZAPNumberMessages(baseUrl, function(data) {
-            getZAPMessages(baseUrl, data.numberOfMessages, function(zapMessages) {
-               console.log(zapMessages.messages)
+    if($(this).is(':checked')) {
+       var parser = document.createElement('a');
+       parser.href = targetURL;
+       var baseUrl = "http://" + parser.hostname;
+
+       getZAPNumberAlerts(baseUrl, function(data) {
+          getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
+            var results = zapAlerts.alerts;
+            var alerts = [];
+
+            results.forEach(function(alert) {
+              if (alert.url == targetURL) {
+                console.log(alert);
+                alerts.push(alert);
+              }
             });
-         })
-      });
+            //var passive_alerts = document.getElementById('passiveAlerts');
+            //passive_alerts.innerText = alerts.join("");
+            makeOrderedList(alerts);
+          });
+       })
+    }
+    else {
+      var node = document.getElementById('passiveAlerts');
+      while (node.firstChild) {
+        node.removeChild(node.firstChild);
+      }
+    }
+
+     /*getZAPNumberMessages(baseUrl, function(data) {
+        getZAPMessages(baseUrl, data.numberOfMessages, function(zapMessages) {
+           console.log(zapMessages.messages)
+        });
+     })*/
 	})
 
 	$('#crawl').click(function() {
@@ -229,7 +282,7 @@ document.addEventListener('DOMContentLoaded', function() {
     key = Math.random().toString(16).slice(2)
     keyArgument = "apikey=" + key
     prompt("Use this command to start ZAP:", "./zap.sh -daemon -config api.key=" + key)
-    document.getElementById('b5').disabled = true;
+    document.getElementById('ZAPClick').disabled = true;
 	})
 
 });
@@ -292,6 +345,7 @@ $(document).ready(function()
       //TODO uncheck any active boxes that are checked
     } else {
       $('.activeOnly').attr("disabled", true);
+      $('.activeOnly').attr("checked", false);
       $('.activeBox').addClass('deactivatedBox')
     }
   })
@@ -334,10 +388,10 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     document.getElementById('pageCookies').innerText = "Cookies: " + msg.cookies;
   }
 
-  if (msg.spiderResults) {
+  /*if (msg.spiderResults) {
     var crawler_data_div = document.getElementById('crawler_data');
     crawler_data_div.innerText = msg.spiderResults;
-  }
+  }*/
 
   console.log("Got message from background page" + JSON.stringify(msg));
 });

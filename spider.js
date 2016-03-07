@@ -51,6 +51,88 @@
   // alert(url); // Shows "undefined", because chrome.tabs.query is async.
 }*/
 
+function statusBar(scanId) {
+  var elem = document.getElementById("myBar");   
+  var percent = 10;
+  var id = setInterval(frame, 100);
+  function frame() {
+    if (percent >= 100) {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/JSON/spider/view/fullResults/',
+        data: scanId,
+        dataType: 'json',
+        success: function(data) {
+          parseOutput(data.fullResults);
+        }
+      });
+      elem.style.width = '5%'; 
+      document.getElementById("label").innerHTML = '0%';
+      clearInterval(id);
+    } 
+    else {
+      $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/JSON/spider/view/status/',
+        data: scanId,
+        dataType: 'json',
+        success: function(data) {
+          percent = data.status;
+          elem.style.width = data.status + '%'; 
+          document.getElementById("label").innerHTML = data.status * 1  + '%';
+        }
+       }); 
+    }
+  }
+}
+
+function parseOutput(data) {
+  var links = [];
+  var urlsInScope = data[0].urlsInScope;
+  var urlsOutOfScope = data[1].urlsOutOfScope;
+
+  urlsInScope.forEach(function(value) {
+    links.push(value.url + "\n");
+    console.log(value.url);
+  });
+  urlsOutOfScope.forEach(function(value) {
+    links.push(value + "\n");
+    console.log(value);
+  });
+
+  //chrome.tabs.sendMessage(mainTab, {spiderResults: links.join("")});
+  //if (msg.spiderResults) {
+  var crawler_data_div = document.getElementById('spiderResults');
+  crawler_data_div.innerText = links.join("");
+  //}
+}
+
+function setChecked(value) {
+  document.getElementById("recurse").checked = value;
+  document.getElementById("referer").checked = value;
+  document.getElementById("process").checked = value;
+  document.getElementById("processPost").checked = value;
+  document.getElementById("parseHtml").checked = value;
+  document.getElementById("parseRobots").checked = value;
+  document.getElementById("parseSitemap").checked = value;
+  document.getElementById("parseSvn").checked = value;
+  document.getElementById("parseGit").checked = value;
+  document.getElementById("handleOData").checked = value;
+}
+
+function changeAll() {
+  $('#recurse').trigger("change");
+  $('#referer').trigger("change");
+  $('#process').trigger("change");
+  $('#processPost').trigger("change");
+  $('#parseHtml').trigger("change");
+  $('#parseRobots').trigger("change");
+  $('#parseSitemap').trigger("change");
+  $('#parseGit').trigger("change");
+  $('#parseSvn').trigger("change");
+  $('#handleOData').trigger("change");
+}
+
 var apiKey;
 var url;
 var children = 0;
@@ -266,84 +348,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 });
-
-function statusBar(scanId) {
-  var elem = document.getElementById("myBar");   
-  var percent = 10;
-  var id = setInterval(frame, 100);
-  function frame() {
-    if (percent >= 100) {
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:8080/JSON/spider/view/fullResults/',
-        data: scanId,
-        dataType: 'json',
-        success: function(data) {
-          parseOutput(data.fullResults);
-        }
-      });
-      elem.style.width = '5%'; 
-      document.getElementById("label").innerHTML = '0%';
-      clearInterval(id);
-    } 
-    else {
-      $.ajax({
-        type: 'GET',
-        url: 'http://localhost:8080/JSON/spider/view/status/',
-        data: scanId,
-        dataType: 'json',
-        success: function(data) {
-          percent = data.status;
-          elem.style.width = data.status + '%'; 
-          document.getElementById("label").innerHTML = data.status * 1  + '%';
-        }
-       }); 
-    }
-  }
-}
-
-function parseOutput(data) {
-  var links = [];
-  var urlsInScope = data[0].urlsInScope;
-  var urlsOutOfScope = data[1].urlsOutOfScope;
-
-  urlsInScope.forEach(function(value) {
-    links.push(value.url + "\n");
-    console.log(value.url);
-  });
-  urlsOutOfScope.forEach(function(value) {
-    links.push(value + "\n");
-    console.log(value);
-  });
-
-  chrome.tabs.sendMessage(mainTab, {spiderResults: links.join("")});
-}
-
-function setChecked(value) {
-  document.getElementById("recurse").checked = value;
-  document.getElementById("referer").checked = value;
-  document.getElementById("process").checked = value;
-  document.getElementById("processPost").checked = value;
-  document.getElementById("parseHtml").checked = value;
-  document.getElementById("parseRobots").checked = value;
-  document.getElementById("parseSitemap").checked = value;
-  document.getElementById("parseSvn").checked = value;
-  document.getElementById("parseGit").checked = value;
-  document.getElementById("handleOData").checked = value;
-}
-
-function changeAll() {
-  $('#recurse').trigger("change");
-  $('#referer').trigger("change");
-  $('#process').trigger("change");
-  $('#processPost').trigger("change");
-  $('#parseHtml').trigger("change");
-  $('#parseRobots').trigger("change");
-  $('#parseSitemap').trigger("change");
-  $('#parseGit').trigger("change");
-  $('#parseSvn').trigger("change");
-  $('#handleOData').trigger("change");
-}
 
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.key) {
