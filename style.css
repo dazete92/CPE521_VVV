@@ -29,24 +29,29 @@ ul {
 
 #leftBot {
     background:rgba(255,255,0,0.3); /* light green */
+    overflow: auto;
+    height: 130px;
 }
 
 #rightBot {
     background:rgba(235,80,150,0.3); /* salmon */
+    overflow: auto;
+    height: 130px;
 }
 
 #mid {
     background:rgba(0,0,255,0.3);
+    height: 10px;
+    overflow: auto;
 }
 
 #botContainer {
     width: 100%; /* or whatever width you want. */
-    max-width:250px; /* or whatever width you want. */
-    display: inline-block;
 }
 
 #botContainers {
 	display: inline;
+    overflow: auto;
 }
 
 .zapButton {
