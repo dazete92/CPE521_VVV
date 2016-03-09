@@ -378,9 +378,11 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     console.log("window id: " + contentWindowId);
   }
   if (msg.target_url) {
-    targetURL = msg.target_url;
-    console.log("tab url: " + targetURL);
-    document.getElementById('activePageTitle').innerText = "Active Page: " + targetURL;
+    if (msg.target_url.indexOf("http") > -1 ) {
+      targetURL = msg.target_url;
+      console.log("tab url: " + targetURL);
+      document.getElementById('activePageTitle').innerText = "Active Page: " + targetURL;
+    }
   }
   if (msg.scanResults) {
     var scan_info_div = document.getElementById('scanInfo');
