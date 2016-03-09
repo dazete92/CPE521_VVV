@@ -100,11 +100,13 @@ function parseOutput(data) {
     console.log(value);
   });
 
-  //chrome.tabs.sendMessage(mainTab, {spiderResults: links.join("")});
-  //if (msg.spiderResults) {
   var crawler_data_div = document.getElementById('spiderResults');
-  crawler_data_div.innerText = links.join("");
-  //}
+  if (links.length != 0) {
+    crawler_data_div.innerText = links.join("");
+  }
+  else {
+    crawler_data_div.innerText = "No Links found via Crawler";
+  }
 }
 
 function setChecked(value) {

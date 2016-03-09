@@ -131,30 +131,44 @@ function makeOrderedList(alerts) {
   alertList.type = "1";
   container.appendChild(alertList);
 
-  alerts.forEach(function (alert) {
-    var alertName = document.createElement('li');
-    alertName.appendChild(document.createTextNode(alert.alert));
+  if (alerts.length != 0) {
+    alerts.forEach(function (alert) {
+      var alertName = document.createElement('li');
+      alertName.appendChild(document.createTextNode(alert.alert + " (" + alert.url + ")"));
 
-    var eulist = document.createElement('ul');
+      var eulist = document.createElement('ul');
 
-    $.each(alert, function (field) {
-      if (field == "other" || field == "solution" ||
-        field == "reference" || field == "description" || field == "risk") {
-          //console.log(field);
-          var item = document.createElement('li');
-          item.appendChild(document.createTextNode(field + ": " + alert[field]));
-          eulist.appendChild(item);
-      }
+      var item = document.createElement('li');
+      item.appendChild(document.createTextNode("Description: " + alert.description));
+      eulist.appendChild(item);
+
+      $.each(alert, function (field) {
+        if (field == "solution" || field == "reference" || field == "risk") {
+            item = document.createElement('li');
+            fieldLabel = field.toString().charAt(0).toUpperCase() + field.toString().slice(1);
+            item.appendChild(document.createTextNode(fieldLabel + ": " + alert[field]));
+            eulist.appendChild(item);
+        }
+      });
+
+      item = document.createElement('li');
+      item.appendChild(document.createTextNode("More Information: " + alert.other));
+      eulist.appendChild(item);
+
+      alertName.addEventListener("click", function () {
+        $(this).find('ul').slideToggle();
+      });
+
+      eulist.style.cssText = 'display: none;'
+      alertName.appendChild(eulist);
+      alertList.appendChild(alertName);
     });
-
-    alertName.addEventListener("click", function () {
-      $(this).find('ul').slideToggle();
-    });
-
-    eulist.style.cssText = 'display: none;'
-    alertName.appendChild(eulist);
-    alertList.appendChild(alertName);
-  });
+  }
+  else {
+    var noAlertsFound = document.createElement('li');
+    noAlertsFound.appendChild(document.createTextNode("No Alerts Found"));
+    alertList.appendChild(noAlertsFound);
+  }
 
 }
 
@@ -233,15 +247,12 @@ document.addEventListener('DOMContentLoaded', function() {
           getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
             var results = zapAlerts.alerts;
             var alerts = [];
-
             results.forEach(function(alert) {
               if (alert.url == targetURL) {
-                console.log(alert);
                 alerts.push(alert);
               }
             });
-            //var passive_alerts = document.getElementById('passiveAlerts');
-            //passive_alerts.innerText = alerts.join("");
+            console.log(alerts);
             makeOrderedList(alerts);
           });
        })
@@ -275,6 +286,8 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('loaded script in window');
       });
     })
+    document.getElementById("crawl").checked = false;
+
 	})
 
 	$('#ZAPClick').click(function() {
