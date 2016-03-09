@@ -401,10 +401,19 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     var scan_info_div = document.getElementById('scanInfo');
 
     scan_info_div.innerText = msg.scanResults;
+    console.log(msg.scanResults);
   }
 
   if (msg.cookies) {
-    document.getElementById('cookiesScroll').innerText = "Cookies: " + msg.cookies;
+    document.getElementById('cookiesScroll').innerText =  msg.cookies;
+  }
+
+  if (msg.url_params) {
+    document.getElementById('pageUrlParams').innerText = msg.url_params;
+  }
+
+  if (msg.header) {
+    document.getElementById('pageHeader').innerText = msg.header;
   }
 
   /*if (msg.spiderResults) {

@@ -152,9 +152,12 @@ function getURLParameters(document_root) {
     //parameters = paramsCollection;
 
     if (parameters.replace(/\s/g, '') != '')
-        parameters = '\nParameters:\n' + parameters;
+        parameters = parameters;
     else
         parameters = '';
+
+    chrome.runtime.sendMessage({from: "content_script", 
+                                url_params: parameters}); 
 
     return parameters;
 }
@@ -168,7 +171,10 @@ function getHttpHeader(document_root) {
     headers = req.getAllResponseHeaders().toLowerCase();
 
     if (headers.length > 0)
-         headers = '\nHeader Information:\n' + headers;
+         headers = headers;
+
+    chrome.runtime.sendMessage({from: "content_script", 
+                                header: headers}); 
 
     return headers;
 }
