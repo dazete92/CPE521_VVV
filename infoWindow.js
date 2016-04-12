@@ -172,6 +172,10 @@ function makeOrderedList(alerts) {
 
 }
 
+chrome.cookies.getAll({domain: ".google.com"}, function(cookies) {
+  console.log(cookies)
+})
+
 //interactions with the HTML
 document.addEventListener('DOMContentLoaded', function() {
    var key;
@@ -196,6 +200,15 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   })
+
+  $('#gen_info').click(function() {
+    $('div.info').slideToggle();  
+  });
+
+  $('div.info').click(function() {
+    var child = $(this).children('.desc')
+    child.slideToggle()         
+  });
 
   /*$('#enable-active').click(function() {
     if (!$('#active-buttons').is(":visible")) {
@@ -235,41 +248,41 @@ document.addEventListener('DOMContentLoaded', function() {
 		});	
 	})*/
 
-	$('#zapPassive').click(function() {
-		console.log('clicked button 3')
+	// $('#zapPassive').click(function() {
+	// 	console.log('clicked button 3')
 
-    if($(this).is(':checked')) {
-       var parser = document.createElement('a');
-       parser.href = targetURL;
-       var baseUrl = "http://" + parser.hostname;
+ //    if($(this).is(':checked')) {
+ //       var parser = document.createElement('a');
+ //       parser.href = targetURL;
+ //       var baseUrl = "http://" + parser.hostname;
 
-       getZAPNumberAlerts(baseUrl, function(data) {
-          getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
-            var results = zapAlerts.alerts;
-            var alerts = [];
-            results.forEach(function(alert) {
-              if (alert.url == targetURL) {
-                alerts.push(alert);
-              }
-            });
-            console.log(alerts);
-            makeOrderedList(alerts);
-          });
-       })
-    }
-    else {
-      var node = document.getElementById('passiveAlerts');
-      while (node.firstChild) {
-        node.removeChild(node.firstChild);
-      }
-    }
+ //       getZAPNumberAlerts(baseUrl, function(data) {
+ //          getZAPAlerts(baseUrl, data.numberOfAlerts, function(zapAlerts) {
+ //            var results = zapAlerts.alerts;
+ //            var alerts = [];
+ //            results.forEach(function(alert) {
+ //              if (alert.url == targetURL) {
+ //                alerts.push(alert);
+ //              }
+ //            });
+ //            console.log(alerts);
+ //            makeOrderedList(alerts);
+ //          });
+ //       })
+ //    }
+ //    else {
+ //      var node = document.getElementById('passiveAlerts');
+ //      while (node.firstChild) {
+ //        node.removeChild(node.firstChild);
+ //      }
+ //    }
 
-     /*getZAPNumberMessages(baseUrl, function(data) {
-        getZAPMessages(baseUrl, data.numberOfMessages, function(zapMessages) {
-           console.log(zapMessages.messages)
-        });
-     })*/
-	})
+ //     /*getZAPNumberMessages(baseUrl, function(data) {
+ //        getZAPMessages(baseUrl, data.numberOfMessages, function(zapMessages) {
+ //           console.log(zapMessages.messages)
+ //        });
+ //     })*/
+	// })
 
 	$('#crawl').click(function() {
     var spiderURL = targetURL

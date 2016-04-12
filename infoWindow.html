@@ -19,6 +19,16 @@
         overflow: hidden;
         max-width: 400px;
       }
+      #summary {
+        display: none;
+        font-size:18px;
+      }
+      #gen_info {
+        font-size:15px;
+      }
+      div.info, div.desc {
+        display:none;
+      }
     </style>
 
     <!--
@@ -46,7 +56,7 @@
     </ul>
     <h3>Tools</h3>
     <ul class="toolCheckbox" style="margin: 10px">
-      <li><input type="checkbox" class="checkbox" id='passiveScan'>Passive Scan</li>
+      <li><input type="checkbox" class="checkbox" id='passiveScan'>Display Overlay</li>
       <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='crawl' disabled="true">Crawl</li>
       <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='zapActive' disabled="true">ZAP Active Scan</li>
       <li><input type="checkbox" class="checkbox" id='zapPassive'>View ZAP Alerts for Current Page</li>
@@ -82,12 +92,21 @@
           </ul>
       </li>
     <li class='botContainer' id='mid'>
-      <h4>Page Alerts</h4>
-      <div id="passiveAlerts">
-         <ul id="pageAlerts">
-          <li class='detail' id='passiveAlerts'> </li>
-        </ul>
+      <div id="summary"> Cookie Summary</div>
+      <div id="gen_info"> General Cookie Information (click)</div>
+      <div class="info" id="definition"> What is a Cookie? (click)
+        <div class="desc" id="definition_text"> A cookie is a piece of data sent from a website that is stored in the browser.</div>
       </div>
+      <br><div class="info" id="use_case"> What are cookies used for (click)
+        <div class="desc" id="use_text"> Cookies are used to remember state information (browsing activity, passwords, etc.). Each time a website is loaded, the browser sends the cookie back to the website to remind it of previous activity.</div>
+      </div>
+      <br><div class="info" id="security"> Security Implications of Cookies (click)
+        <div class="desc" id="security_text"> </div>
+      </div>
+      <br><div class="info" id="best_practice"> Best Practices (click)
+        <div class="desc" id="practice_text"> </div>
+      </div>
+      <div id="gen_info"> Cookie Specifics</div>
     </li>
   </ul>
 <!--

@@ -13,7 +13,8 @@
 		"tabs", 
 		"<all_urls>",
 		"*://*/*",
-		"declarativeWebRequest"
+		"declarativeWebRequest",
+		"cookies"
 	],
 	"background": {
     	"scripts": ["background.js"],
