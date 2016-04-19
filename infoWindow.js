@@ -316,11 +316,13 @@ document.addEventListener('DOMContentLoaded', function() {
 //check for new tabs
 var lastActiveTab;
 var myTabId;
+var lastActiveDomain;
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.getCurrent(function(tab){myTabId = tab.id;});
   if (myTabId && activeInfo.tabId != myTabId) {
     lastActiveTab = activeInfo.tabId;
+    lastActiveDomain = extractDomain(activeInfo.url);
     scanPage();
     console.log("lastActive: " + lastActiveTab + ", my: " + myTabId);
   }
@@ -331,6 +333,7 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
     chrome.tabs.query({'windowId': windowId, 'active': true}, function(tabs) {
       if (myTabId && tabs[0].id != myTabId) {
         lastActiveTab = tabs[0].id;
+        lastActiveDomain = extractDomain(tabs[0].url);
         scanPage();
         console.log("window focus change - lastActive: " + lastActiveTab + ", my: " + myTabId);
       }
@@ -436,3 +439,19 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
   console.log("Got message from background page" + JSON.stringify(msg));
 });
+
+function extractDomain(url) {
+    var domain;
+    //find & remove protocol (http, ftp, etc.) and get domain
+    if (url.indexOf("://") > -1) {
+        domain = url.split('/')[2];
+    }
+    else {
+        domain = url.split('/')[0];
+    }
+
+    //find & remove port number
+    domain = domain.split(':')[0];
+
+    return domain;
+};
