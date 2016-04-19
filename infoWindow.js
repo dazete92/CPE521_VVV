@@ -320,22 +320,29 @@ var lastActiveDomain;
 
 chrome.tabs.onActivated.addListener(function(activeInfo) {
   chrome.tabs.getCurrent(function(tab){myTabId = tab.id;});
+
   if (myTabId && activeInfo.tabId != myTabId) {
     lastActiveTab = activeInfo.tabId;
-    lastActiveDomain = extractDomain(activeInfo.url);
-    scanPage();
-    console.log("lastActive: " + lastActiveTab + ", my: " + myTabId);
+
+    chrome.tabs.get(activeInfo.tabId, function(tab) {
+      lastActiveDomain = tab.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1];
+      scanPage();
+
+      console.log("lastActive: " + lastActiveTab + ", my: " + myTabId + " domain: " + lastActiveDomain);
+    });
   }
 });
 
 chrome.windows.onFocusChanged.addListener(function(windowId) {
   if (windowId != -1) {
+
     chrome.tabs.query({'windowId': windowId, 'active': true}, function(tabs) {
       if (myTabId && tabs[0].id != myTabId) {
+        
         lastActiveTab = tabs[0].id;
-        lastActiveDomain = extractDomain(tabs[0].url);
+        lastActiveDomain = tabs[0].url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1];
         scanPage();
-        console.log("window focus change - lastActive: " + lastActiveTab + ", my: " + myTabId);
+        console.log("window focus change - lastActive: " + lastActiveTab + ", my: " + myTabId + " domain: " + lastActiveDomain);
       }
       //console.log("window id:" + windowId);
     }); 
