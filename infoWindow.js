@@ -172,10 +172,6 @@ function makeOrderedList(alerts) {
 
 }
 
-chrome.cookies.getAll({domain: ".google.com"}, function(cookies) {
-  console.log(cookies)
-})
-
 //interactions with the HTML
 document.addEventListener('DOMContentLoaded', function() {
    var key;
@@ -391,6 +387,29 @@ $(document).ready(function()
   })
 });
 
+function filterCookies(pageCookies, domains) {
+
+}
+
+function getCookies(targetURL) {
+  var parser = document.createElement('a')
+  var pageCookies = []
+
+  parser.href = targetURL
+  var domains = parser.hostname.split('.')
+
+  var string = domains[domains.length - 1]
+  for (i = domains.length - 2; i >= 0; i--) {
+    string = domains[i] + '.' + string
+    chrome.cookies.getAll({domain: string}, function(cookies) {
+      pageCookies.push.apply(pageCookies, cookies)
+    })
+  }
+  console.log(pageCookies)
+  filterCookies(pageCookies, domains)
+}
+
+
 //Grab the current pages HTML
 var contentWindowId;
 var targetURL;
@@ -417,7 +436,10 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     if (msg.target_url.indexOf("http") > -1 ) {
       targetURL = msg.target_url;
       console.log("tab url: " + targetURL);
-      document.getElementById('activePageTitle').innerText = "Active Page: " + targetURL;
+
+      getCookies(targetURL)
+
+      document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
     }
   }
   if (msg.scanResults) {
