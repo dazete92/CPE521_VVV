@@ -324,6 +324,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
       lastActiveDomain = tab.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1];
       scanPage();
 
+      document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
       console.log("lastActive: " + lastActiveTab + ", my: " + myTabId + " domain: " + lastActiveDomain);
     });
   }
@@ -336,8 +337,10 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
       if (myTabId && tabs[0].id != myTabId) {
         
         lastActiveTab = tabs[0].id;
-        lastActiveDomain = tabs[0].url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1];
+        lastActiveDomain = tabs[0].url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i);
         scanPage();
+
+        document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
         console.log("window focus change - lastActive: " + lastActiveTab + ", my: " + myTabId + " domain: " + lastActiveDomain);
       }
       //console.log("window id:" + windowId);
@@ -439,7 +442,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
       getCookies(targetURL)
 
-      document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
+      //document.getElementById('activePageTitle').innerText = "Active Page: " + targetURL;
     }
   }
   if (msg.scanResults) {
