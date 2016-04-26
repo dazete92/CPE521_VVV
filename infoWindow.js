@@ -362,6 +362,7 @@ function scanPage() {
       }
     });
   }
+  getCookies(lastActiveDomain)
 }
 
 $(document).ready(function() 
@@ -439,8 +440,6 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
     if (msg.target_url.indexOf("http") > -1 ) {
       targetURL = msg.target_url;
       console.log("tab url: " + targetURL);
-
-      getCookies(targetURL)
 
       //document.getElementById('activePageTitle').innerText = "Active Page: " + targetURL;
     }
