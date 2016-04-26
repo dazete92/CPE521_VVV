@@ -26,7 +26,7 @@
       #gen_info {
         font-size:15px;
       }
-      div.info, div.desc {
+      div.cinfo, div.xinfo, div.desc {
         display:none;
       }
     </style>
@@ -92,21 +92,39 @@
           </ul>
       </li>
     <li class='botContainer' id='mid'>
-      <div id="summary"> Cookie Summary</div>
-      <div id="gen_info"> General Cookie Information (click)</div>
-      <div class="info" id="definition"> What is a Cookie? (click)
-        <div class="desc" id="definition_text"> A cookie is a piece of data sent from a website that is stored in the browser.</div>
+      <div class = "gen_info" id="c"> General Cookie Information (click) </div>
+        <div class="cinfo" id="definition"> What is a Cookie? (click)
+          <div class="desc" id="definition_text"> A cookie is a piece of data sent from a website that is stored in the browser.</div>
+        </div><br>
+        <div class="cinfo" id="use_case"> What are cookies used for (click)
+          <div class="desc" id="use_text"> Cookies are used to remember state information (browsing activity, passwords, etc.). Each time a website is loaded, the browser sends the cookie back to the website to remind it of previous activity.</div>
+        </div><br>
+        <div class="cinfo" id="security"> Security Implications of Cookies (click)
+          <div class="desc" id="security_text"> </div>
+        </div><br>
+        <div class="cinfo" id="best_practice"> Best Practices (click)
+          <div class="desc" id="practice_text"> </div>
+        </div>
+      <div class="gen_info" id="pageCookies"> View Current Page Cookies (click)
+      <!-- place holder for cookie table -->
+      </div><br><br>
+
+      <div class ="gen_info" id="x"> General XSS Information (click) </div>
+        <div class="xinfo" id="definition"> What is XSS? (click)
+          <div class="desc" id="definition_text"> Cross site scripting (XSS) is .</div>
+        </div><br>
+        <div class="xinfo" id="use_case"> What is XSS used for (click)
+          <div class="desc" id="use_text"> .</div>
+        </div><br>
+        <div class="xinfo" id="security"> Security Implications of XSS (click)
+          <div class="desc" id="security_text"> </div>
+        </div><br>
+        <div class="xinfo" id="best_practice"> Best Practices (click)
+          <div class="desc" id="practice_text"> </div>
+        </div>
+      <div class="gen_info" id="xxs_example"> View XSS Vulnerability (click)
+      <!-- place holder for XSS example -->
       </div>
-      <br><div class="info" id="use_case"> What are cookies used for (click)
-        <div class="desc" id="use_text"> Cookies are used to remember state information (browsing activity, passwords, etc.). Each time a website is loaded, the browser sends the cookie back to the website to remind it of previous activity.</div>
-      </div>
-      <br><div class="info" id="security"> Security Implications of Cookies (click)
-        <div class="desc" id="security_text"> </div>
-      </div>
-      <br><div class="info" id="best_practice"> Best Practices (click)
-        <div class="desc" id="practice_text"> </div>
-      </div>
-      <div id="gen_info"> Cookie Specifics</div>
     </li>
   </ul>
 <!--

@@ -197,11 +197,20 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   })
 
-  $('#gen_info').click(function() {
-    $('div.info').slideToggle();  
+  $('div.gen_info').click(function() {
+    var id = $(this).attr('id')
+    console.log(id)
+    var c_name = "div.".concat(id).concat("info")
+    console.log(c_name)
+    $(c_name).slideToggle()
   });
 
-  $('div.info').click(function() {
+  $('div.cinfo').click(function() {
+    var child = $(this).children('.desc')
+    child.slideToggle()         
+  });
+
+  $('div.xinfo').click(function() {
     var child = $(this).children('.desc')
     child.slideToggle()         
   });
@@ -362,6 +371,7 @@ function scanPage() {
       }
     });
   }
+  console.log(lastActiveDomain)
   getCookies(lastActiveDomain)
 }
 
@@ -399,18 +409,17 @@ function getCookies(targetURL) {
   var parser = document.createElement('a')
   var pageCookies = []
 
-  parser.href = targetURL
-  var domains = parser.hostname.split('.')
+  var domains = targetURL.split('.')
 
   var string = domains[domains.length - 1]
   for (i = domains.length - 2; i >= 0; i--) {
     string = domains[i] + '.' + string
+    console.log(string)
     chrome.cookies.getAll({domain: string}, function(cookies) {
+      console.log(cookies)
       pageCookies.push.apply(pageCookies, cookies)
     })
   }
-  console.log(pageCookies)
-  filterCookies(pageCookies, domains)
 }
 
 
