@@ -48,6 +48,43 @@
 
   </head>
   <body>
+
+  <div id="xssContainer" class="container">
+      <h3>XSS</h3>
+      <a href="xssHelp.html">Need more info?</a>
+      <br>
+      <a href="xssHowTo.html">How to test for it?</a>
+
+      <ul id='botContainers' style="display:inline-block; width: 100%">
+        <li class='botContainer' id='leftBot'>
+          <h4>List</h4>
+          <ul id="attackSurfaceList">
+          </ul>
+        </li>
+        <li class='botContainer' id='rightBot'>
+          <h4>Details</h4>
+          <ul id="selectedDetails">
+            <li class='detail' id='detailType'>Type: </li>
+            <li class='detail' id='detailId'>ID: </li>
+            <li class='detail' id='detailContent'>Content:
+              <ul id='contentScroll' style="overflow: auto; height: 200px; width: 100%; border: solid;">
+                <li></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+  </div>
+  <div id="cookieContainer" class="container">
+      <h3>Cookies</h3>
+      <a href="cookiesHelp.html">Need more info?</a>
+      <div class="gen_info" id="pageCookies"> View Current Page Cookies (click)
+      <!-- place holder for cookie table -->
+      </div><br><br>
+  </div>
+
+  <!--
   <div id="topContainer" class="container">
     <ul id="topBar">
       <li class='topButton clicked' id='passive'>Passive</li>
@@ -62,6 +99,9 @@
       <li><input type="checkbox" class="checkbox" id='zapPassive'>View ZAP Alerts for Current Page</li>
     </ul>
   </div>
+  -->
+  <br><br><br><h1>Old VVV</h1>
+
   <ul id='botContainers' style="display:inline-block; width: 100%">
       <li class='botContainer' id="leftBot">
           <h4 id="activePageTitle">Active Page: </h4>

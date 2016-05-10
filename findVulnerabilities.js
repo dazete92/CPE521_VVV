@@ -24,7 +24,11 @@ function findXSS(document_root) {
     //find ALL forms
     var inputs = '';
     var inputsCollection = document.getElementsByTagName("input");
+    var toSend = [];
+
     for (var i=0; i < inputsCollection.length; i++) {
+        toSend.push([inputsCollection[i].getAttribute('id'), inputsCollection[i].getAttribute('type'), inputsCollection[i].outerHTML]);
+
         inputsCollection[i].setAttribute("style", "outline: #FF0000 ridge;");
         inputsCollection[i].addEventListener("click", function(){ console.log("field pressed"); });
         inputsCollection[i].addEventListener("click", function(){ 
@@ -35,9 +39,13 @@ function findXSS(document_root) {
                                             detail_content: this.outerHTML,
                                             detail_vuln: "XSS"}); 
         });
+
         //inputs += inputsCollection[i].outerHTML;
         //inputs += "\n";
     }
+
+    chrome.runtime.sendMessage({from: "content_script",
+                                attackSurface: JSON.stringify(toSend)});
 
     return inputs;
 }

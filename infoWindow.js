@@ -359,8 +359,8 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 
 function scanPage() {
   console.log()
-  if (document.getElementById('passiveScan').checked) {
-    //inject scri`pt into last known tab
+  //if (document.getElementById('passiveScan').checked) {
+    //inject script into last known tab
     console.log("scan" + lastActiveTab);
     chrome.tabs.executeScript(lastActiveTab, {
     file: "findVulnerabilities.js"
@@ -370,7 +370,7 @@ function scanPage() {
         scanInfo.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
       }
     });
-  }
+ //}
   console.log(lastActiveDomain)
   getCookies(lastActiveDomain)
 }
@@ -426,6 +426,7 @@ function getCookies(targetURL) {
 //Grab the current pages HTML
 var contentWindowId;
 var targetURL;
+var attackSurface;
 
 chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.clicked) {
@@ -438,8 +439,30 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
     detail_id.innerText = "ID: " + msg.detail_id;
     detail_type.innerText = "Type: " + msg.detail_type;
-    detail_content.innerText = "Content: " + msg.detail_content;
+    detail_content.innerText = msg.detail_content;
     detail_vuln.innerText = "Likely Vulnerable To: " + msg.detail_vuln;
+  }
+  if (msg.attackSurface) {
+    attackSurface = JSON.parse(msg.attackSurface);
+    var list = document.getElementById("attackSurfaceList");
+    list.addEventListener("click", function(e) {
+          console.log(e);
+          document.getElementById("detailContent").innerText = "";
+      });
+
+    for (var i=0; i < attackSurface.length; i++) {
+      console.log("as:" + attackSurface[i]);
+      var idStr = attackSurface[i][0];
+
+      var entry = document.createElement('li');
+      entry.appendChild(document.createTextNode(idStr));
+      var hiddenDetail = document.createElement("input");
+      hiddenDetail.setAttribute("type", "hidden");
+      hiddenDetail.setAttribute("name", "content");
+      hiddenDetail.setAttribute("value", attackSurface[i][2]);
+      entry.appendChild(hiddenDetail)
+      list.appendChild(entry);
+    }
   }
   if (msg.content_window_id) {
     contentWindowId = msg.content_window_id;

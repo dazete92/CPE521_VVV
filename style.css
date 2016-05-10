@@ -32,16 +32,16 @@ ul {
 
 #leftBot {
     float: left;
-    background:rgba(255,255,0,0.3); /* light green */
-    height: 240px;
-    width: 50%;
+    background:rgba(211,211,211,0.3); /* light gray */
+    height: 300px;
+    width: 30%;
 }
 
 #rightBot {
     float: left;
-    background:rgba(235,80,150,0.3); /* salmon */
-    height: 240px;
-    width: 50%;
+    background:rgba(224,224,224,0.3); /* salmon */
+    height: 300px;
+    width: 70%;
 }
 
 #mid {
@@ -49,6 +49,11 @@ ul {
     background:rgba(0,0,255,0.3);
     height: 130px;
     width: 100%
+}
+
+#attackSurfaceList {
+    height: 260px;
+    overflow: scroll;
 }
 
 #botContainer {
