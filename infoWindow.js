@@ -358,6 +358,7 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 });
 
 function scanPage() {
+  pageCookies = []
   console.log()
   //if (document.getElementById('passiveScan').checked) {
     //inject script into last known tab
@@ -372,7 +373,9 @@ function scanPage() {
     });
  //}
   console.log(lastActiveDomain)
-  getCookies(lastActiveDomain)
+  getCookies(lastActiveDomain, function(cookies) {
+    filterCookies(pageCookies, cookies)
+  })
 }
 
 $(document).ready(function() 
@@ -401,23 +404,39 @@ $(document).ready(function()
   })
 });
 
-function filterCookies(pageCookies, domains) {
+function filterCookies(pageCookies, cookies) {
+  var parser = document.createElement('a')
+  parser.href = targetURL
+  var domains = parser.hostname.split('.')
+  console.log(domains)
+  var string = domains[domains.length - 1]
 
+  for (j = 0; j < cookies.length; j++) {
+    for (i = domains.length - 2; i >= 0; i--) {
+      string = domains[i] + '.' + string
+      string2 = "." + string
+      console.log(cookies[j].domain, string)
+      if (cookies[j].domain == string || cookies[j].domain == string2) {
+        pageCookies.push(cookies[j])
+        break
+      }
+    }
+    string = domains[domains.length - 1]
+  }
+  console.log(pageCookies)
 }
 
-function getCookies(targetURL) {
+function getCookies(target, callback) {
   var parser = document.createElement('a')
-  var pageCookies = []
-
-  var domains = targetURL.split('.')
+  var domains = target.split('.')
+  console.log(domains)
 
   var string = domains[domains.length - 1]
-  for (i = domains.length - 2; i >= 0; i--) {
+  for (i = domains.length - 2; i >= 1; i--) {
     string = domains[i] + '.' + string
     console.log(string)
     chrome.cookies.getAll({domain: string}, function(cookies) {
-      console.log(cookies)
-      pageCookies.push.apply(pageCookies, cookies)
+      callback(cookies)
     })
   }
 }
