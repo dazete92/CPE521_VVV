@@ -1,27 +1,69 @@
- <div class = "gen_info" id="c"> General Cookie Information (click) </div>
-	<div class="cinfo" id="definition"> What is a Cookie? (click)
-	  <div class="desc" id="definition_text"> A cookie is a piece of data sent from a website that is stored in the browser.</div>
-	</div><br>
-	<div class="cinfo" id="use_case"> What are cookies used for (click)
-	  <div class="desc" id="use_text"> Cookies are used to remember browser state information (browsing activity, passwords, etc.). Each time a website is loaded, the browser sends the cookie back to the website to remind it of previous activity. One popular example that uses cookies is an online shopping cart, where items remain in the cart when the online store is revisited. </div>
-	</div><br>
-	<div class="cinfo" id="security"> Security Implications of Cookies (click)
-	  <div class="desc" id="security_text"> If cookies aren't secured properly or stolen, they can be used by an attacker to steal information or impersonate a valid user. </div>
-	</div><br>
-	<div class="cinfo" id="best_practice"> Best Practices (click)
-	  <div class="desc" id="practice_text"> Cookies should be encrypted or encoded to protect their information. The use of multiple, smaller cookies versus one large cookie can also be beneficial</div>
-	  <table>
-	    <colgroup>
-	      <col span="2">
-	    </colgroup>
-	    <tr>
-	      <th>DO's</th>
-	      <th>DON'Ts</th>
-	    </tr>
-	    <tr>
-	      <td>Test</td>
-	      <td>Test2</td>
-	    </tr>
-	  </table>
-	</div>
-</div>
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <title>Cookie Information</title>
+
+    <script src="jquery.js"></script>
+    <script src="jquery.qtip.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="jquery-ui.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+  </head>
+  <div class = "gen_info" id="c"> General Cookie Information</div><br>
+    <div class="cinfo" id="definition"> What is a Cookie?
+      <div class="desc" id="definition_text"> A cookie is a piece of data sent from a website that is stored in the browser.</div>
+    </div><br>
+    <div class="cinfo" id="use_case"> What are cookies used for?
+      <div class="desc" id="use_text"> Cookies are used to remember browser state information, such as browsing activity and passwords. Each time a website is loaded, the browser sends the cookie back to the website to remind it of previous activity. One popular example that uses cookies is an online shopping cart, where items remain in the cart when the online store is revisited. Another popular example is login preservation, which allows a user to visit their email page without having to log in every time.</div>
+    </div><br>
+    <div class="cinfo" id="security"> Security Implications of Cookies
+      <div class="desc" id="security_text"> If cookies aren't secured properly or stolen, they can be used by an attacker to steal information or impersonate users. If a valid user is using cookies to authenticate access to their email and an attacker steals their cookies, the attacker can then access the user's email without needing to provide login information.</div>
+    </div><br>
+    <div class="cinfo" id="best_practice"> Best Practices
+      <div class="desc" id="best_list">
+        <ul style="list-style-type: disc;">
+          <li>Understand how to properly use cookies. This includes how to use them, what they are used for, and why they are used.</li>
+          <li>Understand cookie attributes. This includes what attributes are available, what each attribute does, how to set them, and when to set them. See the table below.</li>
+          <li>Always encrypt or encode cookies that contain sensitive information</li>
+          <li>Test and verify that the cookie attributes are correct</li>
+        </ul>
+      </div>
+  	</div><br>
+  	<div class="cinfo" id="attr_info"> Important Cookie Attributes
+			<div class="desc" id="attr_table">
+	      <table style="table-layout: auto;">
+	        <tr>
+	          <th style="text-align: center;">Attribute</th>
+	          <th style="text-align: center;">Description</th>
+	        </tr>
+	        <tr>
+	          <td>Secure</td>
+	          <td>Tells the browser to only send the cookie over a secure connection (HTTPS). Enabling this option prevents a cookie from being tranmitted through unencrypted connections.</td>
+	        </tr>
+	        <tr>
+	          <td>HttpOnly</td>
+	          <td>Tells the browser to only allow HTTP requests to access the cookie's information. This prevents access from any JavaScript code. Not supported on all browsers.</td>
+	        </tr>
+	        <tr>
+	          <td>Domain</td>
+	          <td>Tells the browser to check the URL being requested against the domain name of the server that is processing the request.</td>
+	        </tr>
+	        <tr>
+	          <td>Path</td>
+	          <td>Specifies the URLs where the cookie is considered valid. Used in conjunction with the domain attribute to verify the validity of a request.</td>
+	        </tr>
+	        <tr>
+	          <td>Expires</td>
+	          <td>Specifies the expiration date of the cookie.</td>
+	        </tr>
+	      </table>
+      </div>
+  	</div>
+  </div>
+</html>
