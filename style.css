@@ -83,6 +83,10 @@ ul {
     background-color: #4CAF50;
 }
 
+.listClicked {
+    font-weight: bold;
+}
+
 .toolCheckbox {
 	float: left;
 }

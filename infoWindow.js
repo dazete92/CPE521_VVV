@@ -453,7 +453,7 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
     var detail_id = document.getElementById('detailId');
     var detail_type = document.getElementById('detailType');
-    var detail_content = document.getElementById('contentScroll');
+    var detail_content = document.getElementById('detailContent');
     var detail_vuln = document.getElementById('detailVuln');
 
     detail_id.innerText = "ID: " + msg.detail_id;
@@ -464,14 +464,31 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   if (msg.attackSurface) {
     attackSurface = JSON.parse(msg.attackSurface);
     var list = document.getElementById("attackSurfaceList");
-    list.addEventListener("click", function(e) {
-          console.log(e);
-          document.getElementById("detailContent").innerText = "";
-      });
+    while (list.hasChildNodes()) {
+      list.removeChild(list.firstChild);
+    }
+   /*list.addEventListener("click", function(e) {
+          console.log(e.target);
+          document.getElementById("detailContent").innerText = e.target.id;
+      });*/
+
+    $(list).click(function(event) {
+        // this.append wouldn't work
+        console.log("clicked");
+        $("#detailId")[0].innerText = "ID: " + event.target.textContent;
+        //$("#detailType")[0].innerText = "Type: " + event.target.firstElementChild.value.type;
+        $("#detailContent")[0].innerText = event.target.firstElementChild.value;
+        console.log(event.target);
+        $('.listClicked').removeClass('listClicked');
+        event.target.addClass('listClicked');
+    });
 
     for (var i=0; i < attackSurface.length; i++) {
       console.log("as:" + attackSurface[i]);
       var idStr = attackSurface[i][0];
+      if (idStr == null) {
+        idStr = "<No ID String>";
+      }
 
       var entry = document.createElement('li');
       entry.appendChild(document.createTextNode(idStr));
