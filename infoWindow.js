@@ -12,6 +12,10 @@
 //initial stuff
 
 //functions and listeners
+cookiesList = ''
+
+
+
 function getCurrentTabUrl(callback) {
   // Query filter to be passed to chrome.tabs.query - see
   // https://developer.chrome.com/extensions/tabs#method-query
@@ -322,6 +326,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 
     chrome.tabs.get(activeInfo.tabId, function(tab) {
       lastActiveDomain = tab.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1];
+      getCookies(lastActiveDomain)
       scanPage();
 
       document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
@@ -349,7 +354,6 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 });
 
 function scanPage() {
-  console.log()
   if (document.getElementById('passiveScan').checked) {
     //inject scri`pt into last known tab
     console.log("scan" + lastActiveTab);
@@ -362,7 +366,6 @@ function scanPage() {
       }
     });
   }
-  getCookies(lastActiveDomain)
 }
 
 $(document).ready(function() 
@@ -386,31 +389,40 @@ $(document).ready(function()
     }
   })
 
+
   $('.zapButton').click(function() {
     //ZAP BUTTON STUFF GOES HERE
   })
 });
 
 function filterCookies(pageCookies, domains) {
+}
 
+function createCookieHTML(c) {
+  return "<h3>" + c.name + "</h3>" + "<p>" + c.value + "</p>"
 }
 
 function getCookies(targetURL) {
   var parser = document.createElement('a')
-  var pageCookies = []
+  cookiess = []
 
   parser.href = targetURL
   var domains = parser.hostname.split('.')
-
   var string = domains[domains.length - 1]
-  for (i = domains.length - 2; i >= 0; i--) {
-    string = domains[i] + '.' + string
-    chrome.cookies.getAll({domain: string}, function(cookies) {
-      pageCookies.push.apply(pageCookies, cookies)
+  var string = 'edu'
+  chrome.cookies.getAll({domain: 'edu'}, function(c) {
+    cookiess = c
+    // Can filter cookies here
+
+    $(function() {
+      c.forEach(function(cookie) {
+        document.getElementById('cookieAccordion').innerHTML += createCookieHTML(cookie)
+      })
+
+      $('#cookieAccordion').accordion({'active': false, 'collapsible': true});
     })
-  }
-  console.log(pageCookies)
-  filterCookies(pageCookies, domains)
+
+  })
 }
 
 
@@ -452,7 +464,9 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   }
 
   if (msg.cookies) {
-    document.getElementById('cookiesScroll').innerText =  msg.cookies;
+
+    //document.getElementById('cookiesScroll').innerText =  msg.cookies;
+
   }
 
   if (msg.url_params) {
@@ -486,3 +500,4 @@ function extractDomain(url) {
 
     return domain;
 };
+
