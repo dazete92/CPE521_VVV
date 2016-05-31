@@ -5,7 +5,6 @@ function DOMtoString(document_root) {
 
     //THIS IS WHERE WE CAN MODIFY THE DOM
 
-
     var html = '',
         node = document_root.firstChild;
     while (node) {
