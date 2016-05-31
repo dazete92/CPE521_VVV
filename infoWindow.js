@@ -124,6 +124,28 @@ function getZAPMessages(url, alertNum, callback) {
 	});
 }
 
+/*
+function xss() {
+  var element = document.getElementById();
+  var xssList = {'<script>alert('xss'));</script>;'}
+
+  for (int i=0; i<xssList.length; i++) {
+    var url = xssList[i]
+  }
+}
+
+function httpGetAsync(theUrl, callback)
+{
+    var xmlHttp = new XMLHttpRequest();
+    xmlHttp.onreadystatechange = function() { 
+        if (xmlHttp.readyState == 4 && xmlHttp.status == 200)
+            callback(xmlHttp.responseText);
+    }
+    xmlHttp.open("GET", theUrl, true); // true for asynchronous 
+    xmlHttp.send(null);
+}
+*/
+
 function makeOrderedList(alerts) {
   var container = document.getElementById('passiveAlerts');
   var alertList = document.createElement('ol');
