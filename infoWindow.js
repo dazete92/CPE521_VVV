@@ -113,7 +113,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
       getCookies(lastActiveDomain)
       scanPage();
 
-      document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
+      //document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
       console.log("lastActive: " + lastActiveTab + ", my: " + myTabId + " domain: " + lastActiveDomain);
     });
   }
@@ -138,7 +138,7 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 });
 
 function scanPage() {
-  if (document.getElementById('passiveScan').checked) {
+  if (true) {
     pageCookies = []
     //if (document.getElementById('passiveScan').checked) {
       //inject script into last known tab
@@ -153,7 +153,7 @@ function scanPage() {
       });
     }
  //}
-  console.log(lastActiveDomain)
+  console.log("scan: " + lastActiveDomain)
   getCookies(lastActiveDomain, function(cookies) {
     filterCookies(pageCookies, cookies)
   })
