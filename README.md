@@ -1,5 +1,5 @@
 Vulociraptor Vulnerability Visualizer
-=========
+==========
 
 The Vulociraptor Vulnerability Visualizer (VVV) is a tool to guide web developers towards more secure web development. Without extensive security training or knowledge it can be difficult to identify potential security issues while developing a web application. VVV was built assuming the developer has no prior knowledge about web application security. VVV extracts details from a web page and provides visual overlays to inform the developer where potential security issues may exist.
 
