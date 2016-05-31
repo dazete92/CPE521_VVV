@@ -21,7 +21,7 @@
       <div class="desc" id="best_list">
         <ol type="1">
           <li><b>Validate Input</b> - All input received from users should be treated as <i>untrusted data</i> and should be checked by the server. If a name is expected, confirm there are only alphabetic characters in the input. If a price is expected, confirm there are only numbers in the input. Remember, all input validation needs to be implemented server side as client side validation can be bipassed.</li>
-          <li><b>Sanitize Input</b> - </li>
+          <li><b>Sanitize Input</b> - </li> <!-- TODO -->
           <li><b>Encode Output</b> - All untrusted user data being displayed in a web page needs to be encoded on the way out. This means that special characters, such as &lt;&gt;/;&amp;=, will be encoded with <i>html encoding</i> and they will be displayed as text, not interpretted as code. It is also important to understand the context that the untrusted data is being output to so that it gets encoded properly. For example, if untrusted data is included in a URL it needs to be encoded with <i>URI encoding</i> instead of html encoding because there is a different set of special characters for URL's, than html.</li>
         </ol>
       </div>
