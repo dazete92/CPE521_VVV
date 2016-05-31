@@ -26,8 +26,20 @@
       #gen_info {
         font-size:15px;
       }
-      div.info, div.desc {
+      div.cinfo, div.xinfo, div.desc{
         display:none;
+      }
+      table {
+        border-collapse: separate;
+        border-spacing: 5px 5px;
+        border: 1px solid black;
+        text-align: center;
+        width: 75%;
+        padding: 5px 5px;
+        margin: 0 auto;
+      }
+      td, th {
+        border: 1px solid black;
       }
     </style>
 
@@ -46,23 +58,53 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" type="text/css" href="jquery.qtip.min.css">
 
-
   </head>
   <body>
-  <div id="topContainer" class="container">
-    <ul id="topBar">
-      <li class='topButton clicked' id='passive'>Passive</li>
-      <li class='topButton' id='active'>Active</li>
-      <li class='zapButton' id='ZAPClick'><img class='zapImage' src='zap_logo.png'/></li>
-    </ul>
-    <h3>Tools</h3>
-    <ul class="toolCheckbox" style="margin: 10px">
-      <li><input type="checkbox" class="checkbox" id='passiveScan'>Display Overlay</li>
-      <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='crawl' disabled="true">Crawl</li>
-      <li class="deactivatedBox activeBox"><input type="checkbox" class="checkbox activeOnly" id='zapActive' disabled="true">ZAP Active Scan</li>
-      <li><input type="checkbox" class="checkbox" id='zapPassive'>View ZAP Alerts for Current Page</li>
-    </ul>
+
+  <div id="gen_info"> Cookie Specifics
+    <div id="cookieDropDown">
+    </div>
+    <div id="cookieAccordion">
+    </div>
+
   </div>
+
+  <div id="xssContainer" class="container">
+      <h3>XSS</h3>
+      <a href="xssHelp.html">Need more info?</a>
+      <br>
+      <a href="xssHowTo.html">How to test for it?</a>
+
+      <ul id='botContainers' style="display:inline-block; width: 100%">
+        <li class='botContainer' id='leftBot'>
+          <h4>List</h4>
+          <ul id="attackSurfaceList">
+          </ul>
+        </li>
+        <li class='botContainer' id='rightBot'>
+          <h4>Details</h4>
+          <ul id="selectedDetails">
+            <!-- <li class='detail' id='detailType'>Type: </li> -->
+            <li class='detail' id='detailId'>ID: </li>
+            <li class='detail' id='detailContent'>Content:
+              <ul id='contentScroll' style="overflow: auto; height: 200px; width: 100%; border: solid;">
+                <li></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+
+  </div>
+  <div id="cookieContainer" class="container">
+      <h3>Cookies</h3>
+      <a href="cookiesHelp.html">Need more info?</a>
+      <div class="gen_info" id="pageCookies"> View Current Page Cookies
+      <!-- place holder for cookie table -->
+      </div><br><br>
+  </div>
+  <br><br><br><h1>Old VVV</h1>
+
   <ul id='botContainers' style="display:inline-block; width: 100%">
       <li class='botContainer' id="leftBot">
           <h4 id="activePageTitle">Active Page: </h4>
@@ -79,7 +121,6 @@
           </ul>
       </li>
       <li class='botContainer' id='rightBot'>
-          <!-- <h4>Page Details</h4> -->
           <ul id="pageDetails">
             <li class='detail' id='pageCookies'>Cookies 
                 <ul id='cookiesScroll' style="overflow: auto; height: 60px; width: 80%; border: solid;">
@@ -93,71 +134,73 @@
           </ul>
       </li>
     <li class='botContainer' id='mid'>
-      <div id="summary"> Cookie Summary</div>
-      <div id="gen_info"> General Cookie Information (click)</div>
-      <div class="info" id="definition"> What is a Cookie? (click)
-        <div class="desc" id="definition_text"> A cookie is a piece of data sent from a website that is stored in the browser.</div>
-      </div>
-      <br><div class="info" id="use_case"> What are cookies used for (click)
-        <div class="desc" id="use_text"> Cookies are used to remember state information (browsing activity, passwords, etc.). Each time a website is loaded, the browser sends the cookie back to the website to remind it of previous activity.</div>
-      </div>
-      <br><div class="info" id="security"> Security Implications of Cookies (click)
-        <div class="desc" id="security_text"> </div>
-      </div>
-      <br><div class="info" id="best_practice"> Best Practices (click)
-        <div class="desc" id="practice_text"> </div>
-      </div>
-      <div id="gen_info"> Cookie Specifics
-        <div id="cookieDropDown">
+      <div class = "gen_info" id="c"> General Cookie Information (click) </div>
+        <div class="cinfo" id="definition"> What is a Cookie? (click)
+          <div class="desc" id="definition_text"> A cookie is a piece of data sent from a website that is stored in the browser.</div>
+        </div><br>
+        <div class="cinfo" id="use_case"> What are cookies used for (click)
+          <div class="desc" id="use_text"> Cookies are used to remember browser state information, such as browsing activity and passwords. Each time a website is loaded, the browser sends the cookie back to the website to remind it of previous activity. One popular example that uses cookies is an online shopping cart, where items remain in the cart when the online store is revisited. Another popular example is login preservation, which allows a user to visit their email page without having to log in every time.</div>
+        </div><br>
+        <div class="cinfo" id="security"> Security Implications of Cookies (click)
+          <div class="desc" id="security_text"> If cookies aren't secured properly or stolen, they can be used by an attacker to steal information or impersonate users. If a valid user is using cookies to authenticate access to their email and an attacker steals their cookies, the attacker can then access the user's email without needing to provide login information.</div>
+        </div><br>
+        <div class="cinfo" id="best_practice"> Best Practices (click)
+          <div class="desc" id="best_list">
+            <ul style="list-style-type: disc;"><br>
+              <li>Understand how to properly use cookies. This includes how to use them, what they are used for, and why they are used.</li>
+              <li>Understand cookie attributes. This includes what attributes are available, what each attribute does, how to set them, and when to set them. See the table below.</li>
+              <li>Always encrypt or encode cookies that contain sensitive information</li>
+              <li>Test and verify that the cookie attributes are correct</li>
+            </ul>
+          </div><br>
+          <div class="desc" id="attr_info">
+            <table style="table-layout: auto;"> Important Cookie Attributes
+              <tr>
+                <th style="text-align: center;">Attribute</th>
+                <th style="text-align: center;">Description</th>
+              </tr>
+              <tr>
+                <td>Secure</td>
+                <td>Tells the browser to only send the cookie over a secure connection (HTTPS). Enabling this option prevents a cookie from being tranmitted through unencrypted connections.</td>
+              </tr>
+              <tr>
+                <td>HttpOnly</td>
+                <td>Tells the browser to only allow HTTP requests to access the cookie's information. This prevents access from any JavaScript code. Not supported on all browsers.</td>
+              </tr>
+              <tr>
+                <td>Domain</td>
+                <td>Tells the browser to check the URL being requested against the domain name of the server that is processing the request.</td>
+              </tr>
+              <tr>
+                <td>Path</td>
+                <td>Specifies the URLs where the cookie is considered valid. Used in conjunction with the domain attribute to verify the validity of a request.</td>
+              </tr>
+              <tr>
+                <td>Expires</td>
+                <td>Specifies the expiration date of the cookie.</td>
+              </tr>
+            </table>
+          </div>
         </div>
-        <div id="cookieAccordion">
-        </div>
+      <div class="gen_info" id="pageCookies"> View Current Page Cookies (click)
+      <!-- place holder for cookie table -->
+      </div><br><br>
 
+      <div class ="gen_info" id="x"> General XSS Information (click) </div>
+        <div class="xinfo" id="definition"> What is XSS? (click)
+          <div class="desc" id="definition_text"> Cross site scripting (XSS) is a type of code injection, in which malicious code (usually javascript) is inserted into an otherwise safe, trusted web site. When this code gets loaded into the browser of another user, it is executed. For example, a malicious user may enter <i>&lt;script&gt;alert(&quot;xss&quot;);&lt;/script&gt;</i> into the comment field of a forum which saves it as a comment on the server. When another user visits the forum and loads the web page their browser, believing the code to be from the trusted website, will execute the script.</div>
+        </div><br>
+        <div class="xinfo" id="security"> Security Implications of XSS (click)
+          <div class="desc" id="security_text">XSS can cause a variety of problems for the end user that range in severity from an annoyance to complete account compromise. The most severe XSS attacks involve disclosure of the user&quot;s session cookie, allowing an attacker to hijack the user&quot;s session and take over the account. Other damaging attacks include the disclosure of end user files, installation of Trojan horse programs, redirect the user to some other page or site, or modify presentation of content.</div>
+        </div><br>
+        <div class="xinfo" id="best_practice"> Best Practices (click)
+          <div class="desc" id="practice_text"> </div>
+        </div>
+      <div class="gen_info" id="xxs_example"> View XSS Vulnerability (click)
+      <!-- place holder for XSS example -->
       </div>
+
     </li>
   </ul>
-<!--
-
-
-
-
-
-
-  <br><br><br><br><br>
-
-  <body style="width:400px;">
-    <div id="content">
-      <div class="container">
-        <h1>Vulociraptor</h1>
-      </div>
-    </div>
-    <div class="container" id="passive-tools">
-      <h3>Passive Tools</h3>
-      <button class="btn-primary" type="button" id='findVulnBtn'>Find Surfaces</button><br><br>
-      <button class="btn-primary" type="button" id='b1'>Option 1</button><br><br>
-      <button class="btn-primary" type="button" id='b2'>Option 2</button><br><br>
-      <button class="btn-primary" type="button" id='b5'>API Key</button><br><br>
-    </div>
-
-    <div class="container" id="active-tools">
-      <h3>Active Tools</h3>
-      <button class="btn-primary" type="button" id="enable-active">Enable Active Capabilities</button><br><br>
-      <div id='active-buttons' style='display: none'>
-        <button class="btn-primary" type="button" id='b3'>Option 3</button><br><br>
-        <button class="btn-primary" type="button" id='b4'>Spider</button>
-      </div>
-    </div>
-
-    <div id='messages'> Element Details </div>
-      <p>Type:</p> <p id='detail_type'> unsure </p>
-      <p>ID:</p> <p id='detail_id'> unsure </p>
-      <p>Content:</p> <p id='detail_content'> unsure </p>
-      <p>Most Likely Vulnerable To: </p> <p id='detail_vuln'> unsure </p>
-    <div id='scanInfo'> Scan Info: </div>
-      <p>Scan Data:</p> <p id='scan_data'> unsure </p>
-      <p>Crawler Data:</p> <p id='crawler_data'> unsure </p>
-  </body>
-</html>
--->
 </body>
 </html>

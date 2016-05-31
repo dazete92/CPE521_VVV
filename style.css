@@ -32,16 +32,16 @@ ul {
 
 #leftBot {
     float: left;
-    background:rgba(255,255,0,0.3); /* light green */
-    height: 240px;
-    width: 50%;
+    background:rgba(211,211,211,0.3); /* light gray */
+    height: 300px;
+    width: 30%;
 }
 
 #rightBot {
     float: left;
-    background:rgba(235,80,150,0.3); /* salmon */
-    height: 240px;
-    width: 50%;
+    background:rgba(224,224,224,0.3); /* salmon */
+    height: 300px;
+    width: 70%;
 }
 
 #mid {
@@ -49,6 +49,11 @@ ul {
     background:rgba(0,0,255,0.3);
     height: 130px;
     width: 100%
+}
+
+#attackSurfaceList {
+    height: 260px;
+    overflow: scroll;
 }
 
 #botContainer {
@@ -76,6 +81,10 @@ ul {
 
 .clicked {
     background-color: #4CAF50;
+}
+
+.listClicked {
+    font-weight: bold;
 }
 
 .toolCheckbox {
@@ -112,4 +121,25 @@ ul {
 .zapImage {
     width:40px;
     height:40px;
+}
+div.gen_info {
+    font-size:24px;
+}
+div.cinfo, div.xinfo {
+    font-size:20px;
+}
+div.desc {
+    font-size:16px;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 5px 5px;
+    border: 1px solid black;
+    text-align: center;
+    width: 75%;
+    padding: 5px 5px;
+    margin: 0 auto;
+}
+td, th {
+    border: 1px solid black;
 }

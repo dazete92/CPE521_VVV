@@ -10,6 +10,4 @@ function fuzzer(base_url, fuzz_param, other_params) {
 	    if (headers.length > 0)
 	         headers = '\nHeader Information:\n' + headers;
 	}
-
-    
 }

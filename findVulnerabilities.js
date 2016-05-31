@@ -14,7 +14,6 @@ function discoverAttackSurface(document_root) {
     text += findSession(document_root);
     text += getURLParameters(document_root);
     text += getHttpHeader(document_root);
-    //addToolTips(document_root)
 
     //return text;
 }
@@ -24,7 +23,11 @@ function findXSS(document_root) {
     //find ALL forms
     var inputs = '';
     var inputsCollection = document.getElementsByTagName("input");
+    var toSend = [];
+
     for (var i=0; i < inputsCollection.length; i++) {
+        toSend.push([inputsCollection[i].getAttribute('id'), inputsCollection[i].getAttribute('type'), inputsCollection[i].outerHTML]);
+
         inputsCollection[i].setAttribute("style", "outline: #FF0000 ridge;");
         inputsCollection[i].addEventListener("click", function(){ console.log("field pressed"); });
         inputsCollection[i].addEventListener("click", function(){ 
@@ -35,9 +38,10 @@ function findXSS(document_root) {
                                             detail_content: this.outerHTML,
                                             detail_vuln: "XSS"}); 
         });
-        //inputs += inputsCollection[i].outerHTML;
-        //inputs += "\n";
     }
+
+    chrome.runtime.sendMessage({from: "content_script",
+                                attackSurface: JSON.stringify(toSend)});
 
     return inputs;
 }
@@ -56,9 +60,6 @@ function findAuthentication(document_root) {
 
 
             //Wrap it in jquery and then add the qtip
-
-            //inputs += inputsCollection[i].outerHTML;
-            //inputs += "\n";
         }
     }
 
@@ -88,8 +89,6 @@ function findSQLi(document_root) {
                                                 detail_content: this.outerHTML,
                                                 detail_vuln: "SQLi"}); 
             });
-            //inputs += inputsCollection[i].outerHTML;
-            //inputs += "\n";
         }
     }
 
@@ -103,9 +102,6 @@ function findForms(document_root) {
 
     for (var i=0; i < formsCollection.length; i++) {
         formsCollection[i].setAttribute("style", "outline: #000000 dotted;");
-
-        //inputs += inputsCollection[i].outerHTML;
-        //inputs += "\n";
     }
 
     return forms;
@@ -179,33 +175,7 @@ function getHttpHeader(document_root) {
     return headers;
 }
 
-//helper methods
-/*
-function addToolTips(document_root) {
-    $('.XSSVuln').qtip({
-        content: {
-          text: 'This is an xss vuln!!!!111'
-        },
-        position: {
-            at: 'top right',
-            my: 'bottom left'
-        }
-    });
-}*/
-
-//start script
-/*
-var windowId;
-chrome.windows.getCurrent(function (window) {
-    windowId = window.id;
-});
-
-chrome.runtime.sendMessage({from_content_page: true, content_window_id: windowId});
-
-alert('started');
-*/
 discoverAttackSurface(document);
 
-/*
 
-*/
+
