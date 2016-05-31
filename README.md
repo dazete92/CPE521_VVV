@@ -5,16 +5,16 @@ The Vulociraptor Vulnerability Visualizer (VVV) is a tool to guide web developer
 
 To Do
 ------------
--XSS Fuzzer
-  -Build XSS List
-  -Embed & Send XSS in Forms
-  -Revieve & Detect XSS in Response
--Cookie List
-  -Cookie Flag Checkboxs
-  -Filter Domains
--XSS Help Menu
-  -Add "Best Practices"
--Clean Up
-  -Remove OWASP Logo
-  -Remove Old html Comments
-  -Remove Old js Methods
+- XSS Fuzzer
+  - Build XSS List
+  - Embed & Send XSS in Forms
+  - Revieve & Detect XSS in Response
+- Cookie List ( [Brandon](https://github.com/brandonbevans) )
+  - Cookie Flag Checkboxs
+  - Filter Domains
+- XSS Help Menu ( [David](https://github.com/dscrobonia) )
+  - Add "Best Practices"
+- Clean Up
+  - Remove OWASP Logo
+  - Remove Old html Comments
+  - Remove Old js Methods
