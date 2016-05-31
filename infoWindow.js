@@ -12,6 +12,10 @@
 //initial stuff
 
 //functions and listeners
+cookiesList = ''
+
+
+
 function getCurrentTabUrl(callback) {
   // Query filter to be passed to chrome.tabs.query - see
   // https://developer.chrome.com/extensions/tabs#method-query
@@ -106,6 +110,7 @@ chrome.tabs.onActivated.addListener(function(activeInfo) {
 
     chrome.tabs.get(activeInfo.tabId, function(tab) {
       lastActiveDomain = tab.url.match(/^https?\:\/\/([^\/?#]+)(?:[\/?#]|$)/i)[1];
+      getCookies(lastActiveDomain)
       scanPage();
 
       document.getElementById('activePageTitle').innerText = "Active Page: " + lastActiveDomain;
@@ -133,19 +138,20 @@ chrome.windows.onFocusChanged.addListener(function(windowId) {
 });
 
 function scanPage() {
-  pageCookies = []
-  console.log()
-  //if (document.getElementById('passiveScan').checked) {
-    //inject script into last known tab
-    console.log("scan" + lastActiveTab);
-    chrome.tabs.executeScript(lastActiveTab, {
-    file: "findVulnerabilities.js"
-    }, function(results) {
-      // If you try and inject into an extensions page or the webstore/NTP you'll get an error
-      if (chrome.runtime.lastError) {
-        scanInfo.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
-      }
-    });
+  if (document.getElementById('passiveScan').checked) {
+    pageCookies = []
+    //if (document.getElementById('passiveScan').checked) {
+      //inject script into last known tab
+      console.log("scan" + lastActiveTab);
+      chrome.tabs.executeScript(lastActiveTab, {
+      file: "findVulnerabilities.js"
+      }, function(results) {
+        // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+        if (chrome.runtime.lastError) {
+          scanInfo.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+        }
+      });
+    }
  //}
   console.log(lastActiveDomain)
   getCookies(lastActiveDomain, function(cookies) {
@@ -170,24 +176,51 @@ function filterCookies(pageCookies, cookies) {
         break
       }
     }
-    string = domains[domains.length - 1]
   }
-  console.log(pageCookies)
+
+
+  $('.zapButton').click(function() {
+    //ZAP BUTTON STUFF GOES HERE
+  })
+};
+
+
+function createCookieHTML(c) {
+  return "<h3>" + c.name + "</h3>" + "<p>" + c.value + "</p>"
 }
 
 function getCookies(target, callback) {
   var parser = document.createElement('a')
-  var domains = target.split('.')
-  console.log(domains)
+  cookiess = []
 
+  parser.href = targetURL
+  var domains = parser.hostname.split('.')
   var string = domains[domains.length - 1]
-  for (i = domains.length - 2; i >= 1; i--) {
-    string = domains[i] + '.' + string
-    console.log(string)
-    chrome.cookies.getAll({domain: string}, function(cookies) {
-      callback(cookies)
+  var string = 'edu'
+  chrome.cookies.getAll({domain: 'edu'}, function(c) {
+    cookiess = c
+    // Can filter cookies here
+
+    $(function() {
+      c.forEach(function(cookie) {
+        document.getElementById('cookieAccordion').innerHTML += createCookieHTML(cookie)
+      })
+
+      $('#cookieAccordion').accordion({'active': false, 'collapsible': true});
     })
-  }
+
+  })
+  // var domains = target.split('.')
+  // console.log(domains)
+
+  // var string = domains[domains.length - 1]
+  // for (i = domains.length - 2; i >= 1; i--) {
+  //   string = domains[i] + '.' + string
+  //   console.log(string)
+  //   chrome.cookies.getAll({domain: string}, function(cookies) {
+  //     callback(cookies)
+  //   })
+  // }
 }
 
 //Grab the current pages HTML
@@ -264,7 +297,9 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
   }
 
   if (msg.cookies) {
-    document.getElementById('cookiesScroll').innerText =  msg.cookies;
+
+    //document.getElementById('cookiesScroll').innerText =  msg.cookies;
+
   }
 
   if (msg.url_params) {
@@ -277,3 +312,19 @@ chrome.runtime.onMessage.addListener(function(msg, _, sendResponse) {
 
   console.log("Got message from background page" + JSON.stringify(msg));
 });
+
+function extractDomain(url) {
+    var domain;
+    //find & remove protocol (http, ftp, etc.) and get domain
+    if (url.indexOf("://") > -1) {
+        domain = url.split('/')[2];
+    }
+    else {
+        domain = url.split('/')[0];
+    }
+
+    //find & remove port number
+    domain = domain.split(':')[0];
+
+    return domain;
+};
